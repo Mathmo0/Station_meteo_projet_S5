@@ -43,6 +43,27 @@
 #define SAT 6
 #define SUN 7
 
+typedef struct Heure
+{
+    int seconde;
+    int minute
+    int heure;
+} Heure ;
+
+typedef struct Date
+{
+    char ** jour_semaine[8];
+    int * jour_mois[32];
+    int * mois[13];
+    int * annee;
+} Date ;
+
+typedef struct RTCHD
+{
+    struct Heure H;
+    struct Date D;
+}Horloge;
+
 class DS1307 {
   private:
     uint8_t decToBcd(uint8_t val);
