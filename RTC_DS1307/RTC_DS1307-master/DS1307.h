@@ -45,23 +45,23 @@
 
 typedef struct Heure
 {
-    int seconde;
-    int minute
-    int heure;
+    uint8_t seconde;
+    uint8_t minute
+    uint8_t heure;
 } Heure ;
 
 typedef struct Date
 {
-    char ** jour_semaine[8];
-    int * jour_mois[32];
-    int * mois[13];
-    int * annee;
+    uint8_t jour_semaine[8];
+    uint8_t jour_mois[32];
+    uint8_t mois[13];
+    uint8_t annee;
 } Date ;
 
-typedef struct RTCHD
+typedef struct HorlogeRTC
 {
-    struct Heure H;
-    struct Date D;
+    Heure H;
+    Date D;
 }Horloge;
 
 class DS1307 {
