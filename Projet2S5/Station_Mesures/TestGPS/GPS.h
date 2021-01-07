@@ -11,4 +11,4 @@
 
 void beginGPS();
 void GetGPS_MSG();
-void resetBuffer( char buffer[100]);
+void reset();

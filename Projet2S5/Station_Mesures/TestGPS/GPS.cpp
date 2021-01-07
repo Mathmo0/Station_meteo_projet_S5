@@ -9,39 +9,90 @@
 #include <Arduino.h>
 #include "GPS.h"
 #include <string.h>
+ int count = 0;
+ char buffer[200];
+ int resetMes  = 1;
+ int Parse = 1;
 
 void beginGPS()
 {
   Serial1.begin(9600);
+  reset();
 }
 
 void GetGPS_MSG()
 {
-  //strtok
-  char test[100];
-  
-  //Serial.println("________________affichage avant parse___________________");
-  
-  //Serial.println("________________début parse___________________");
-  Serial1.readBytesUntil("<CR><LF>",test,100);
-  Serial.print(test);
-  int j  = 0;
-  while( j <100)
+  if (resetMes == 0)
   {
-    Serial.println(test[j]);
-    delay(200);  
-    j++;
+    reset();
+    resetMes = 1;  
+    Parse = 1;
   }
+  //reset();
+ /* buffer[count] = Serial1.read();
+  Serial.print("premier crac : ");Serial.println(buffer[count]);
+  delay(100);
+  if( buffer[count] == '$')
+  {
+      count++;
+      Serial.println("entrer dans la boucle");*/
+      
+      while(Serial1.available())
+      {
+          //Serial.print("Valeur de count : ");Serial.println(count);
+          //Serial.println("entrer dans la boucle2");
+          //Serial.println(test[j]);
+          //Serial.print(buffer[j]);
+         
+         buffer[count] = Serial1.read();
+         Serial.println(buffer[count]);
+         if(buffer[count] == '\n' && buffer[count-1] == '\r' )
+         {
+              Serial.println("Sortie en cours fdp : ");
+              //count++;
+              resetMes = 0;
+              Parse = 0;
+              Serial.print(buffer);
+              return ;   
+         }
+         count++;
+         if(count == 200)
+         {
+            reset();  
+         }
+          //delay(200); 
+      }
+      
+      //buffer[count] = '\0';
+ /* }
+  else{Serial.println("Isnot good fdp");}*/
+ 
+  Serial.println(buffer);
+  /*if( resetMes ==1 && count <= 200)
+  {
+  reset(); 
+  }  */
   //test[200]= '\0';
   //Serial.println("________________fin parse___________________");
   
   //Serial.println("________________Affichage après reset___________________");
-  int i = 0;
-  while(i<100)
+  /*int i = 0;
+  while(i<200)
   {
-    test[i] = '\0';
+    buffer[i] = '\0';
+    i++;  
+  }*/
+  //Serial.println(buffer[0]);*/
+  //Serial.print(buffer);
+}
+
+void reset()
+{
+  int i = 0;
+  count = 0;
+  while(i<200)
+  {
+    buffer[i] = '\0';
     i++;  
   }
-  //Serial.println(buffer[0]);*/
-  Serial.print(test);
 }
