@@ -12,3 +12,4 @@
 void beginGPS();
 void GetGPS_MSG();
 void reset();
+void Choix_Msg_NMEA();

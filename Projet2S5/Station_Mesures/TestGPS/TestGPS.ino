@@ -6,7 +6,8 @@ void setup() {
   Serial.begin(9600);
   Serial1.begin(9600);
   beginGPS();
-  Serial1.write("$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n"); // GPRMC
+  Choix_Msg_NMEA();
+  //Serial1.write("$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n"); // GPRMC
   //Serial1.write("$PMTK314,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n"); //GPGGA
   Serial1.println(Serial1.read());
   

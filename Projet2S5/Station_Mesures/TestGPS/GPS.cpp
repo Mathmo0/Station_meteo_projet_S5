@@ -13,6 +13,7 @@
  char buffer[200];
  int resetMes  = 1;
  int Parse = 1;
+ int c = 1;
 
 void beginGPS()
 {
@@ -94,5 +95,22 @@ void reset()
   {
     buffer[i] = '\0';
     i++;  
+  }
+}
+
+void Choix_Msg_NMEA()
+{ 
+  Serial.print("select 1 ou 2 ou rien je men balek ntm sale merde");
+  if(Serial.available())
+  {
+    c = Serial.read();
+    if(c == 2)
+    {
+       Serial1.write("$PMTK314,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n");
+    }
+    else
+    {
+       Serial1.write("$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n");
+    }
   }
 }

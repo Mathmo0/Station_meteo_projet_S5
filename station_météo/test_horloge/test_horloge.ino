@@ -1,4 +1,3 @@
-
 #include "RTC_DS1307.h"
 
 void setup() 
@@ -22,7 +21,6 @@ void setup()
 void loop() 
 {
   // put 3 main code here, to run repeatedly:
-   Serial.print("Bonjour");
    delay(1000);
    Horloge Test = getDateDs1307();
 
