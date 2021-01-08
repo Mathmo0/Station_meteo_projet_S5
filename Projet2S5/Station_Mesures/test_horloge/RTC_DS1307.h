@@ -40,3 +40,4 @@ void Affiche_date_heure(Horloge H);
 uint8_t decToBcd(uint8_t val);
 uint8_t bcdToDec(uint8_t val);
 void beginDs1307();
+int jour_semaine(int jour, int mois, int annee);

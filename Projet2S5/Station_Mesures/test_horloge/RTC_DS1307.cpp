@@ -81,3 +81,13 @@ void beginDs1307()
 {
   Wire.begin();
 }
+
+int jour_semaine(int jour, int mois, int annee)
+{
+  int c = (14-mois)/12;
+  int a = annee-c;
+  int m = mois + 12*c-2;
+  int j = ( jour + a + a/4 - a/100 + a/400 + (31*m)/12 ) % 7;
+
+  return j;
+}

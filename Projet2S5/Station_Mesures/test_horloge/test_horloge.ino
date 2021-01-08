@@ -10,10 +10,11 @@ void setup()
   Test.H.seconde = 0;
   Test.H.minute = 45;
   Test.H.heure = 15;
-  Test.D.jour_semaine = 7;
-  Test.D.jour_mois = 13;
-  Test.D.mois =  12;
-  Test.D.annee = 20;
+  
+  Test.D.jour_mois = 8;
+  Test.D.mois =  01;
+  Test.D.annee = 21;
+  Test.D.jour_semaine = jour_semaine(Test.D.jour_mois, Test.D.mois, Test.D.annee);
   setDateDs1307(Test);
   //Affiche_date_heure(Test);
 
