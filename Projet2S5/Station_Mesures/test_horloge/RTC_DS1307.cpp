@@ -91,3 +91,105 @@ int jour_semaine(int jour, int mois, int annee)
 
   return j;
 }
+
+int Bissextile(Horloge H)
+{
+  int A = H.D.annee + 2000;
+  if(A%4 == 0 && A%100 != 100)
+  {
+    return 1;
+  }
+  else if(A%400 == 0)
+  {
+    return 1;
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+Horloge Correction_Heure_Date(Horloge H, Horloge U, Horloge E)
+{
+  if((H.H.heure + U.H.heure + E.H.heure) >= 24)
+  {
+    if(H.D.mois == 1 || H.D.mois == 3 || H.D.mois == 5 || H.D.mois == 7 || H.D.mois == 8 || H.D.mois == 10 || H.D.mois == 12)
+    {
+      if(H.D.jour_mois == 31)
+      {
+        H.D.jour_mois = 1;
+        if(H.D.mois == 12)
+        {
+          H.D.mois = 01;
+          ++H.D.annee;
+        }
+        else
+        {
+          ++H.D.mois;
+        }
+      }
+      else
+      {
+        ++H.D.jour_mois;
+      }
+    }
+    else if(H.D.mois == 02)
+    {
+      if(Bissextile(H))
+      {
+        if(H.D.jour_mois == 29)
+        {
+          H.D.jour_mois = 1;
+          if(H.D.mois == 12)
+          {
+            H.D.mois = 01;
+            ++H.D.annee;
+          }
+          else
+          {
+            ++H.D.mois;
+          }
+        }
+      }
+      else
+      {
+        if(H.D.jour_mois == 28)
+        {
+          H.D.jour_mois = 1;
+          if(H.D.mois == 12)
+          {
+            H.D.mois = 01;
+            ++H.D.annee;
+          }
+          else
+          {
+            ++H.D.mois;
+          }
+        }
+      }
+    }
+    else
+    {
+      if(H.D.jour_mois == 30)
+      {
+        H.D.jour_mois = 1;
+        if(H.D.mois == 12)
+        {
+          H.D.mois = 01;
+          ++H.D.annee;
+        }
+        else
+        {
+          ++H.D.mois;
+        }
+      }
+      else
+      {
+        ++H.D.jour_mois;
+      }
+    }
+  }
+  H.H.heure = (H.H.heure + U.H.heure + E.H.heure)%24;
+  H.H.minute = (H.H.minute + U.H.minute + E.H.minute)%60;
+  return H;
+}
