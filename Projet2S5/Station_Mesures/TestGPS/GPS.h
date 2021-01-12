@@ -54,3 +54,4 @@ void GetGPS_MSG();
 void reset();
 void  GPS_msg_parse();
 bool  Test_Synchro_GPS();
+void Choix_Msg_NMEA(int c);

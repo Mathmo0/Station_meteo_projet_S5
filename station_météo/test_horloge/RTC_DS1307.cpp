@@ -50,23 +50,21 @@ void Affiche_date_heure(Horloge H)
     char* jour[] = {"Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"};
     char* mois[]= {"Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"};
 
-    //printf("%s %d %s %d %d %d %d",jour[H.D.jour_semaine],H.D.jour_mois,mois[H.D.jour_mois],H.D.annee, H.H.heure,H.H.minute,H.H.seconde);
+    Serial.print(jour[H.D.jour_semaine-1]);
+    Serial.print("    ");
+    Serial.print(H.D.jour_mois);
+    Serial.print("    ");
+    Serial.print(mois[H.D.mois-1]);
+    Serial.print("    ");
+    Serial.print(H.D.annee + 2000);
+    Serial.print("    ");
+
     Serial.print(H.H.heure);
     Serial.print(":");
     Serial.print(H.H.minute);
-    //Serial.prtets pour les variables locales. Le maximum est de 8192 octets.
-    //int(":");
+    Serial.print(":");
     Serial.print(H.H.seconde);
-    Serial.print("	");
-    Serial.print(mois[H.D.mois-1]);
-    Serial.print("/");
-    Serial.print(H.D.jour_mois);
-    Serial.print("/");
-    Serial.print(H.D.annee + 2000);
-    Serial.print(" ");
-    Serial.print(H.D.jour_mois);
-    Serial.print("*");
-    Serial.print(jour[H.D.jour_semaine-1]);
+    Serial.println("    ");
 }
 
 uint8_t decToBcd(uint8_t val)

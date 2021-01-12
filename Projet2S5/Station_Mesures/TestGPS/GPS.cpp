@@ -15,7 +15,9 @@
  char buffer[tailleMAx];
  int resetMes  = 1;
  int Parse = 1;
+ int c = 1;
  NMEA stokageMsg;
+
 void beginGPS()
 {
   Serial1.begin(9600);
@@ -161,6 +163,7 @@ void  GPS_msg_parse( /*char buffer*/ )
       parsermsg = strtok (NULL, ","); //HDOP
       parsermsg = strtok (NULL, ","); // MSL Altitude
       stokageMsg.GPGGA.mslAltitude = parsermsg;
+      
       Serial.print(" stokageMsg.GPGGA.id = ");Serial.println(stokageMsg.GPGGA.id);
       Serial.print(" stokageMsg.GPGGA.positionIndicator = ");Serial.println(stokageMsg.GPGGA.positionIndicator);
       Serial.print(" stokageMsg.GPGGA.mslAltitude = ");Serial.println(stokageMsg.GPGGA.mslAltitude);
@@ -230,4 +233,17 @@ bool Test_Synchro_GPS()
       Serial.println("Message non OK FDP :(");
       return false;   
     }*/
+}
+
+void Choix_Msg_NMEA(int c)
+{ 
+  if(c == 1)
+    {
+       Serial1.write("$PMTK314,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n");
+    }
+    else
+    {
+       Serial1.write("$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n");
+    }
+
 }
