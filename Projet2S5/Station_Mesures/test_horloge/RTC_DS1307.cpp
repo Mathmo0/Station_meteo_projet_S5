@@ -47,8 +47,8 @@ Horloge getDateDs1307()
 
 void Affiche_date_heure(Horloge H)
 {
-    char* jour[] = {"Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"};
-    char* mois[]= {"Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"};
+    char * jour[] = {"Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"};
+    char * mois[]= {"Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"};
 
     Serial.print(jour[H.D.jour_semaine-1]);
     Serial.print("    ");
@@ -82,12 +82,12 @@ void beginDs1307()
   Wire.begin();
 }
 
-int jour_semaine(int jour, int mois, int annee)
+uint8_t jour_semaine(uint8_t jour, uint8_t mois, uint8_t annee)
 {
-  int c = (14-mois)/12;
-  int a = annee-c;
-  int m = mois + 12*c-2;
-  int j = ( jour + a + a/4 - a/100 + a/400 + (31*m)/12 ) % 7;
+  uint8_t c = (14-mois)/12;
+  uint8_t a = annee-c;
+  uint8_t m = mois + 12*c-2;
+  uint8_t j = ( jour + a + a/4 - a/100 + a/400 + (31*m)/12 ) % 7;
 
   return j;
 }
