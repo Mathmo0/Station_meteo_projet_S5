@@ -3,6 +3,7 @@
 //  de manipulation du circuit d'horloge RTC DS1307
 
 #include <Arduino.h>
+//#include "C:\Users\maxim\Documents\station-meteo-projet-s5\Projet2S5\Station_Mesures\TestGPS\GPS.h"
 
 // Définition de type de données pour gestion de la date
 
@@ -40,6 +41,6 @@ void Affiche_date_heure(Horloge H);
 uint8_t decToBcd(uint8_t val);
 uint8_t bcdToDec(uint8_t val);
 void beginDs1307();
-int jour_semaine(int jour, int mois, int annee);
+uint8_t jour_semaine(uint8_t jour, uint8_t mois, uint8_t annee);
 Horloge Correction_Heure_Date(Horloge H, Horloge U, Horloge E);
 int Bissextile(Horloge H);
