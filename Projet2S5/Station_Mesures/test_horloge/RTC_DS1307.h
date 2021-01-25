@@ -41,8 +41,8 @@ typedef struct corrUTC
 
 typedef struct pays_UTC
 {
-  char * pays;
-  char * ville;
+  char pays;
+  char ville;
   corr corr;
 }pays;
 
