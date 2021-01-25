@@ -10,7 +10,7 @@
 #include "GPS.h"
 #include <string.h>
 #include <stdio.h>
-#include "C:\Users\maxim\Documents\station-meteo-projet-s5\Projet2S5\Station_Mesures\test_horloge\RTC_DS1307.h"
+//#include "C:\Users\maxim\Documents\station-meteo-projet-s5\Projet2S5\Station_Mesures\test_horloge\RTC_DS1307.h"
 
  int count = 0;
  const int tailleMAx = 100;
@@ -256,6 +256,9 @@ Horloge Extract_date_heure_from_GPS(/*char * Date, char * Heure*/)
     H.D.jour_mois = (uint8_t)atoi(jourMoisFromGPS);
     H.D.mois = (uint8_t)atoi(MoisFromGPS);
     H.D.annee = (uint8_t)atoi(anneeFromGPS);
+     //Serial.println("H.D.annee=  ");Serial.println(H.D.annee);
+     //Serial.println("H.D.mois =  ");Serial.println(H.D.mois);
+     Serial.print("H.D.jour_mois=  ");Serial.println(H.D.jour_mois);
     //H.D.jour_semaine = jour_semaine( H.D.jour_mois,H.D.mois,H.D.annee+2000);
     //Serial.print("H.D.jour-semaine =  ");Serial.println(H.D.jour_semaine);
     

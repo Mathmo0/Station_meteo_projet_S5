@@ -40,7 +40,7 @@ void loop()
   //Test.D.jour_semaine = jour_semaine( Test.D.jour_mois,Test.D.mois,Test.D.annee+2000);
   //Test_Synchro_GPS();
   //resetBuffer(test);
-  Affiche_date_heure(Test);
+  //Affiche_date_heure(Test);
   Serial.println("    ");
   Serial.println("___________________________________");
   //delay(1000);
