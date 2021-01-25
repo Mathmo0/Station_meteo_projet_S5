@@ -109,9 +109,18 @@ int Bissextile(Horloge H)
   }
 }
 
-Horloge Correction_Heure_Date(Horloge H, Horloge U, Horloge E)
+Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, Horloge E)
 {
-  if((H.H.heure + U.H.heure + E.H.heure) >= 24)
+  if(H.D.mois == 3 && H.D.jour_mois == 28 && H.H.heure == 2)
+  {
+    E.H.heure = 1;
+  }
+  else if(H.D.mois == 10 && H.D.jour_mois == 31 && H.H.heure == 3)
+  {
+    E.H.heure = -1;
+  }
+  
+  if((H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E.H.heure) >= 24)
   {
     if(H.D.mois == 1 || H.D.mois == 3 || H.D.mois == 5 || H.D.mois == 7 || H.D.mois == 8 || H.D.mois == 10 || H.D.mois == 12)
     {
@@ -189,15 +198,9 @@ Horloge Correction_Heure_Date(Horloge H, Horloge U, Horloge E)
       }
     }
   }
-  if(H.D.mois == 3 && H.D.jour_mois == 28 && H.H.heure == 2)
-  {
-    E.H.heure = 1;
-  }
-  else if(H.D.mois == 10 && H.D.jour_mois == 31 && H.H.heure == 3)
-  {
-    E.H.heure = -1;
-  }
-  H.H.heure = (H.H.heure + U.H.heure + E.H.heure)%24;
-  H.H.minute = (H.H.minute + U.H.minute + E.H.minute)%60;
+  
+  H.H.heure = (H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E.H.heure)%24;
+  H.H.minute = (H.H.minute + pays_UTC.corr.minute + E.H.minute)%60;
+  
   return H;
 }

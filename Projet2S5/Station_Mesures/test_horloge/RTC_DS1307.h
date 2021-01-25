@@ -61,7 +61,8 @@ uint8_t decToBcd(uint8_t val);
 uint8_t bcdToDec(uint8_t val);
 void beginDs1307();
 uint8_t jour_semaine(uint8_t jour, uint8_t mois, uint8_t annee);
-Horloge Correction_Heure_Date(Horloge H, Horloge U, Horloge E);
+Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, Horloge E);
 int Bissextile(Horloge H);
+
 
 #endif
