@@ -1,11 +1,4 @@
-
-
 #include "RTC_DS1307.h"
-
-//char UTC[7] = {1, 0, 3, -5, -6, 9, 8};
-
-
-
 
 void setup() 
 {
@@ -56,6 +49,7 @@ void setup()
   Chine.corr.minute = 0;
   
   pays FuseauHoraire[7] = {France,Angleterre,Russie,USA,Canada,Japon,Chine};
+  
 
  //__________________________________
  
@@ -70,15 +64,6 @@ void setup()
   Test.D.mois =  12;
   Test.D.annee = 21;
 
-  Horloge UTC;
-  UTC.H.heure = 1;
-  UTC.H.minute = 30;
-  UTC.H.seconde = 0;
-
-  UTC.D.jour_mois = 0;
-  UTC.D.mois =  0;
-  UTC.D.annee = 0;
-
   Horloge EteHiv;
   EteHiv.H.heure = 0;
   EteHiv.H.minute = 0;
@@ -88,13 +73,11 @@ void setup()
   EteHiv.D.mois =  0;
   EteHiv.D.annee = 0;
   
-  Test = Correction_Heure_Date(Test, UTC, EteHiv);
-
-  //Correction_Heure_Date(Horloge H, int CorUTC, int CorEteHiv)
+  Test = Correction_Heure_Date(Test, Chine, EteHiv);
+  
   Test.D.jour_semaine = jour_semaine(Test.D.jour_mois, Test.D.mois, Test.D.annee);
+  
   setDateDs1307(Test);
-  //Affiche_date_heure(Test);
-
 }
 
 void loop() 
