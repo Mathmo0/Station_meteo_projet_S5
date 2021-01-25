@@ -5,6 +5,8 @@ void setup()
 {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  char pays[7] = ["France","Angleterre", "Russie", "USA", "Canada", "Japon", "Chine"];
+  char UTC[7] = [1, 0, 3, -5, -6, 9, 8];
   
   beginDs1307();
   

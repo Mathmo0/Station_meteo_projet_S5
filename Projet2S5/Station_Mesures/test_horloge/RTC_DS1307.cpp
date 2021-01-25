@@ -189,6 +189,14 @@ Horloge Correction_Heure_Date(Horloge H, Horloge U, Horloge E)
       }
     }
   }
+  if(H.D.mois == 3 && H.D.jour_mois == 28 && H.H.heure == 2)
+  {
+    E.H.heure = 1;
+  }
+  else if(H.D.mois == 10 && H.D.jour_mois == 31 && H.H.heure == 3)
+  {
+    E.H.heure = -1;
+  }
   H.H.heure = (H.H.heure + U.H.heure + E.H.heure)%24;
   H.H.minute = (H.H.minute + U.H.minute + E.H.minute)%60;
   return H;
