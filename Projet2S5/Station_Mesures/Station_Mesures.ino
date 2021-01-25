@@ -39,7 +39,7 @@ volatile int T_Time_Out_Evenement2 = 0;
 
 /*--------------------------------------------------------------------------------------------*/
 // Routine d'IT TImer1 sur Overflow registre de comptage
-ISR(TIMER1_OVF_vect)
+/*ISR(TIMER1_OVF_vect)
 {
   TIMSK1 &= 0B11111110;
 
@@ -50,7 +50,7 @@ ISR(TIMER1_OVF_vect)
   TCNT1 = BASE_TEMPS_TIMER1_05s;
   TIMSK1 = 0B00000001;
   SREG |= 0B10000000;
-}
+}*/
 /*--------------------------------------------------------------------------------------------*/
 
 /*--------------------------------------------------------------------------------------------*/
@@ -68,30 +68,43 @@ void setup(void)
   Test_Synchro_GPS();  
 
   /*Partie initialisation Timer1 : */
-  noInterrupts();
+  /*noInterrupts();
 
   TCCR1A = 0B00000000; // Mode normal
   TCCR1B = 0B00000000; // Timer1 arreté
   TCCR1C = 0B00000000;
   TIFR1 |= 0B00000001; // Mise à 1 du bit TOV1
-  TIMSK1 |= 0B00000001; // Mise à 1 du bit TOEI1 pour autoriser les IT timer 1
+  TIMSK1 |= 0B0000001; // Mise à 1 du bit TOEI1 pour autoriser les IT timer 1
   TCNT1 = BASE_TEMPS_TIMER1_05s;
   interrupts();
-  TCCR1B |= 0B00000101;
-  Serial.println("Initialisation du timer1 : done");
+  TCCR1B |= 0B00000001; //demarre à 1024
+  Serial.println("Initialisation du timer1 : done");*/
 } 
 /*--------------------------------------------------------------------------------------------*/
 void loop() 
 {
+  Horloge Test;
   //GetGPS_MSG();
   //GPS_msg_parse();
   //Test_Synchro_GPS();
-  if (T_Time_Out_Evenement1 <= 0)
-  {
+  //if (T_Time_Out_Evenement1 <= 0)
+  //{
     GetGPS_MSG();
-    T_Time_Out_Evenement1 = T_EVNT1;
-  }
-
+    GPS_msg_parse();
+    Test = Extract_date_heure_from_GPS();
+    Test.D.jour_semaine = jour_semaine(Test.D.jour_mois,Test.D.mois,Test.D.annee);
+    //Serial.print("Test.D.jour-semaine =  ");Serial.println(Test.D.jour_semaine);
+    //Serial.print("Test.D.jour_mois =  ");Serial.println(Test.D.jour_mois);
+    //Serial.print("Test.D.mois =  ");Serial.println(Test.D.mois);
+    //Serial.print("Test.D.annee =  ");Serial.println(Test.D.annee);
+    //Serial.print("Test.H.Heure =  ");Serial.println(Test.H.heure);
+    //Serial.print("Test.H.minute =  ");Serial.println(Test.H.minute);
+    Serial.print("Test.H.seconde =  ");Serial.println(Test.H.seconde);
+    
+    //Affiche_date_heure(Test);
+  //  T_Time_Out_Evenement1 = T_EVNT1;
+  //}
+  Serial.println("en attente");
   /*if (T_Time_Out_Evenement2 <= 0)
   {
     Tache2 ();
