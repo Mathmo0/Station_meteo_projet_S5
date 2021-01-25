@@ -2,8 +2,13 @@
 // Contient les définitions de types de données associées aux fonctions
 //  de manipulation du circuit d'horloge RTC DS1307
 
-#include <Arduino.h>
 //#include "C:\Users\maxim\Documents\station-meteo-projet-s5\Projet2S5\Station_Mesures\TestGPS\GPS.h"
+
+#ifndef __Holorge__
+#define __Holorge__
+
+#include <Arduino.h>
+
 
 // Définition de type de données pour gestion de la date
 
@@ -44,3 +49,5 @@ void beginDs1307();
 uint8_t jour_semaine(uint8_t jour, uint8_t mois, uint8_t annee);
 Horloge Correction_Heure_Date(Horloge H, Horloge U, Horloge E);
 int Bissextile(Horloge H);
+
+#endif
