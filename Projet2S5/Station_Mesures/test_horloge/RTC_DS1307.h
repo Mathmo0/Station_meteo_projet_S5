@@ -28,6 +28,20 @@ typedef struct HorlogeRTC
     Date D;
 }Horloge;
 
+typedef struct corrUTC
+{
+  int minute;
+  int heure;
+}corr;
+
+typedef struct pays_UTC
+{
+  char * pays;
+  char * ville;
+  corr corr;
+}pays;
+
+
 
 // Définition de constantes symboliques
 

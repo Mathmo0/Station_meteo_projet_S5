@@ -1,12 +1,22 @@
 
+
 #include "RTC_DS1307.h"
+
+//char UTC[7] = {1, 0, 3, -5, -6, 9, 8};
+
+
+
 
 void setup() 
 {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  char pays[7] = ["France","Angleterre", "Russie", "USA", "Canada", "Japon", "Chine"];
-  char UTC[7] = [1, 0, 3, -5, -6, 9, 8];
+  
+  UTC_pays.pays[25] = {"France","Angleterre", "Russie", "USA", "Canada", "Japon", "Chine"};
+  UTC_pays.ville[25] = [];
+  UTC_pays.corr[25] = [];
+  corrUTC.heure[25] = []; 
+  corrUTC.minute[25] = [];
   
   beginDs1307();
   
