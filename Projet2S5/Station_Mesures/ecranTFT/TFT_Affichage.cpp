@@ -27,7 +27,7 @@ void TFT_Affichage_Date(Horloge H, Horloge P)
   if(H.D.jour_mois != P.D.jour_mois || H.D.mois != P.D.mois || H.D.annee != P.D.annee)
   {
     char * jour[] = {"Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"};
-    char * mois[]= {"Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"};
+    char * mois[]= {"Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre"};
     tft.setCursor(0,100);
     tft.fillRect(0,100,319,10,BLACK);
     
@@ -76,8 +76,13 @@ void TFT_Affiche_EteHiv(char * EteHiv, char * EteHivPres)
   if(strcmp(EteHiv, EteHivPres))
   {
     tft.setCursor(50, 150);
-    tft.fillRect(50,150,150,10,BLACK);
+    tft.fillRect(50,150,90,10,BLACK);
     tft.print("heure d'");
     tft.print(EteHiv);
   }
+}
+
+void TFT_Affiche_ville_ref_fuseau_horaire()
+{
+  
 }

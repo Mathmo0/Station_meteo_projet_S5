@@ -52,7 +52,7 @@ Horloge getDateDs1307()
 void Affiche_date_heure(Horloge H)
 {
     char * jour[] = {"Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"};
-    char * mois[]= {"Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"};
+    char * mois[]= {"Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre"};
 
     Serial.print(jour[H.D.jour_semaine-1]);
     Serial.print("    ");
@@ -75,7 +75,7 @@ char * IndicateurEteHiv(Horloge H)
 {
   if(H.D.mois >= 3 && H.D.jour_mois >= 28 && H.H.heure >= 2)
     {
-      EteHiv = "été";
+      EteHiv = "ete";
     }
     else
     {
