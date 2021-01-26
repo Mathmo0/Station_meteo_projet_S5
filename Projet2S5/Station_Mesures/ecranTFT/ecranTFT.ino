@@ -35,7 +35,7 @@ void setup() {
   
   pays Canada;
   Canada.pays = "Candada";
-  Canada.ville = "Montréal";
+  Canada.ville = "Montreal";
   Canada.corr.heure = -5;
   Canada.corr.minute = 0;
   
@@ -47,7 +47,7 @@ void setup() {
   
   pays Chine;
   Chine.pays = "Chine";
-  Chine.ville = "Pékin";
+  Chine.ville = "Pekin";
   Chine.corr.heure = 8;
   Chine.corr.minute = 0;
   
@@ -74,14 +74,12 @@ void setup() {
   EteHiv.D.mois =  0;
   EteHiv.D.annee = 0;
   
+  
   Test = Correction_Heure_Date(Test, Chine, EteHiv);
-
-  Test.D.jour_semaine = jour_semaine(Test.D.jour_mois, Test.D.mois, Test.D.annee);
+  
   setDateDs1307(Test);
   
   TFT_setup();
-
-  
 }
 
 void loop() {
@@ -89,6 +87,8 @@ void loop() {
 
    //delay(1000);
    Horloge Test = getDateDs1307();
+   
+   //Test.D.jour_semaine = jour_semaine(Test.D.jour_mois, Test.D.mois, Test.D.annee);
    EteHiv = IndicateurEteHiv(Test);
 
    TFT_Affichage_Date(Test, DatePres);
