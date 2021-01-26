@@ -1,6 +1,6 @@
 #include "GPS.h"
 #include <Arduino.h>
-#include "C:\Users\maxim\Documents\station-meteo-projet-s5\Projet2S5\Station_Mesures\test_horloge\RTC_DS1307.h"
+#include "RTC_DS1307.h"
 
 
 void setup() {
@@ -40,6 +40,8 @@ void loop()
   //Test.D.jour_semaine = jour_semaine( Test.D.jour_mois,Test.D.mois,Test.D.annee+2000);
   //Test_Synchro_GPS();
   //resetBuffer(test);
+   setDateDs1307(Test);
+  Affiche_date_heure(Test);
   //Affiche_date_heure(Test);
   Serial.println("    ");
   Serial.println("___________________________________");
