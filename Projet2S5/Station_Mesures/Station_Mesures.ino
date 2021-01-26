@@ -29,6 +29,9 @@
 // Variables globales
 
 int testH = 0;
+char * buffer2;
+//bool synchro = false;
+NMEA msgFromGpsParser;
 
 /*varibale poru le Timer1 : */
 #define BASE_TEMPS_TIMER1_05s 57723U
@@ -41,8 +44,9 @@ volatile int T_Time_Out_Evenement2 = 0;
 
 /*--------------------------------------------------------------------------------------------*/
 // Routine d'IT TImer1 sur Overflow registre de comptage
-ISR(TIMER1_OVF_vect)
+/*ISR(TIMER1_OVF_vect)
 {
+  
   TIMSK1 &= 0B11111110;
 
   T_Time_Out_Evenement1 --;
@@ -52,25 +56,35 @@ ISR(TIMER1_OVF_vect)
   TCNT1 = BASE_TEMPS_TIMER1_05s;
   TIMSK1 = 0B00000001;
   SREG |= 0B10000000;
-}
+}*/
 /*--------------------------------------------------------------------------------------------*/
 
 /*--------------------------------------------------------------------------------------------*/
 void setup(void)
 {
   Serial.begin(9600);
-  /*Partir initialisation Horloge :*/
+  /*Partie initialisation Horloge :*/
   beginDs1307();
+     /*On initialise l'horlge aux 1 Janvier 2010 00:00:00 */
+  Horloge H;
+  H.H.seconde = 0;
+  H.H.minute = 0;
+  H.H.heure = 0;
+  
+  H.D.jour_mois = 1;
+  H.D.mois =  1;
+  H.D.annee = 10;
+  H.D.jour_semaine = jour_semaine( H.D.jour_mois,H.D.mois,H.D.annee);
+  setDateDs1307(H);
   
   /*Partie initialisation GPS : */
   beginGPS();
   Choix_Msg_NMEA(2);
-  char * buffer;
-  Horloge H;
-  NMEA Test;
+  //char * buffer2;
+  //Horloge H;
+  //NMEA msgFromGpsParser;
   /*Partie initialisation Timer1 : */
   /*noInterrupts();
-
   TCCR1A = 0B00000000; // Mode normal
   TCCR1B = 0B00000000; // Timer1 arreté
   TCCR1C = 0B00000000;
@@ -78,24 +92,46 @@ void setup(void)
   TIMSK1 |= 0B0000001; // Mise à 1 du bit TOEI1 pour autoriser les IT timer 1
   TCNT1 = BASE_TEMPS_TIMER1_05s;
   interrupts();
-  TCCR1B |= 0B00000100; //demarre à 1024
+  TCCR1B |= 0B00000101; //demarre à 1024
   Serial.println("Initialisation du timer1 : done");*/
 } 
 /*--------------------------------------------------------------------------------------------*/
 void loop() 
 {
-  char * buffer;
   Horloge H;
-  NMEA Test;
-  
-  if (T_Time_Out_Evenement1 <= 0)
+  H = getDateDs1307();
+  Affiche_date_heure(H);
+  bool synchro = false;
+  while(synchro == false && strcmp(msgFromGpsParser.GPRMC.id,"$GPRMC")==1)
   {
-    buffer = GetGPS_MSG();
-    Test = GPS_msg_parse(buffer);
-    Test_Synchro_GPS();
-    
+    Serial.println("On est dans la boucle : ");
+    buffer2 = GetGPS_MSG();
+    msgFromGpsParser = GPS_msg_parse(buffer2);
+    synchro = Test_Synchro_GPS(msgFromGpsParser);
+    if(synchro == true && strcmp(msgFromGpsParser.GPRMC.id,"$GPRMC") == 1)
+    {
+      Serial.println("WOWOWOWOWO : ");
+      //H = getDateDs1307();
+      H = Extract_date_heure_from_GPS(msgFromGpsParser.GPRMC.date,msgFromGpsParser.GPRMC.UTCtime);
+      Affiche_date_heure(H);
+    }
   }
-  Serial.println("en attente");
+  
+  /*if (T_Time_Out_Evenement1 <= 0)
+  {
+    buffer2 = GetGPS_MSG();
+    msgFromGpsParser = GPS_msg_parse(buffer2);
+    synchro = Test_Synchro_GPS(msgFromGpsParser);
+    if(synchro == true)
+    {
+      H = Extract_date_heure_from_GPS(msgFromGpsParser.GPRMC.date,msgFromGpsParser.GPRMC.UTCtime);
+      setDateDs1307(H);
+    }
+    
+    
+    
+  }*/
+  Serial.println("______________________en attente________________________");
   /*if (T_Time_Out_Evenement2 <= 0)
   {
     Tache2 ();

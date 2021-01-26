@@ -46,11 +46,11 @@ char * GetGPS_MSG()
          Serial.print(buffer[count]);
          if(buffer[count] == '\n' && buffer[count-1] == '\r' )
          {
-              //Serial.println("Sortie en cours fdp : ");
+              Serial.println("Sortie en cours fdp : ");
               //count++;
               resetMes = 0;
               Parse = 1;
-              //Serial.print("Avnt return : ");Serial.print(buffer);
+              Serial.print("Avnt return : ");Serial.print(buffer);
               char * test = strdup(buffer);
               Serial.print("test =  ");Serial.print(test);
               return test;   
