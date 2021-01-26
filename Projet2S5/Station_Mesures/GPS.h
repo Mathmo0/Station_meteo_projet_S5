@@ -60,7 +60,7 @@ char *GetGPS_MSG();
 void reset();
 NMEA GPS_msg_parse(char * buffer);
 
-bool  Test_Synchro_GPS();
+bool  Test_Synchro_GPS(NMEA Verif);
 void Choix_Msg_NMEA(int c);
 Horloge Extract_date_heure_from_GPS(char Date[6], char Heure[6]);
 

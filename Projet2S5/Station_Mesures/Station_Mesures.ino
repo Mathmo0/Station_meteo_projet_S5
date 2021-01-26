@@ -65,9 +65,6 @@ void setup(void)
   /*Partie initialisation GPS : */
   beginGPS();
   Choix_Msg_NMEA(2);
-  /*GetGPS_MSG();
-  GPS_msg_parse();
-  Test_Synchro_GPS(); */
   char * buffer;
   Horloge H;
   NMEA Test;
@@ -90,6 +87,7 @@ void loop()
   char * buffer;
   Horloge H;
   NMEA Test;
+  
   if (T_Time_Out_Evenement1 <= 0)
   {
     buffer = GetGPS_MSG();

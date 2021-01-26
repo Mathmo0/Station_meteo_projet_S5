@@ -43,14 +43,14 @@ char * GetGPS_MSG()
       while(Serial1.available())
       {  
          buffer[count] = Serial1.read();
-         //SSerial.println(buffer[count]);
+         Serial.print(buffer[count]);
          if(buffer[count] == '\n' && buffer[count-1] == '\r' )
          {
-              Serial.println("Sortie en cours fdp : ");
+              //Serial.println("Sortie en cours fdp : ");
               //count++;
               resetMes = 0;
               Parse = 1;
-              Serial.print("Avnt return : ");Serial.print(buffer);
+              //Serial.print("Avnt return : ");Serial.print(buffer);
               char * test = strdup(buffer);
               Serial.print("test =  ");Serial.print(test);
               return test;   
@@ -172,23 +172,23 @@ NMEA GPS_msg_parse(char * buffer2)
    return stokageMsg;
   
 }
-bool Test_Synchro_GPS()
+bool Test_Synchro_GPS(NMEA Verif)
 {
-  if((int)stokageMsg.PMTK.flag == 3) 
+  if((int)Verif.PMTK.flag == 3) 
   {
-    //Serial.println("Message OK2!!!");
+    Serial.println("Synchronise");
     return true;
   }
   
-  else if(strcmp(stokageMsg.GPRMC.statut,"A") == 0)
+  else if(strcmp(Verif.GPRMC.statut,"A") == 0)
   {
-      //Serial.println("Message OK!!!");
+      Serial.println("Synchronise");
       return true;
   }
  
-  else if(strcmp(stokageMsg.GPGGA.id,"$GPGGA") == 0)
+  else if(strcmp(Verif.GPGGA.id,"$GPGGA") == 0)
   {
-    Serial.println("Message OK :(");
+    Serial.println("Synchronise");
     return false;
   }
   //else{Serial.println("nooooooooooooooooooooonnnnnnnnnnnnnnnnnnnnnnnnnn presque");}  

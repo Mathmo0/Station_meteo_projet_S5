@@ -1,6 +1,7 @@
 #include "GPS.h"
-
+int k = 0;
 int testH = 0;
+extern int Parse;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
@@ -12,7 +13,9 @@ void setup() {
   char * buffer;
   Choix_Msg_NMEA(2);
   setDateDs1307(H);
-  //H = getDateDs1307();
+  buffer = GetGPS_MSG();
+  test = GPS_msg_parse(buffer);
+  H = Extract_date_heure_from_GPS(test.GPRMC.date,test.GPRMC.UTCtime);
   //Serial1.write("$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n"); // GPRMC
   //Serial1.write("$PMTK314,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29\r\n"); //GPGGA
 }
@@ -21,8 +24,24 @@ void loop() {
   Horloge H;
   NMEA test;
   char * buffer;
+  
   buffer = GetGPS_MSG();
+  test = GPS_msg_parse(buffer);
+  
+  if(Test_Synchro_GPS(test) == true){
+  
+  H = Extract_date_heure_from_GPS(test.GPRMC.date,test.GPRMC.UTCtime);
+  //H = getDateDs1307();
   Affiche_date_heure(H);
+  k++;
+  }
+  if(k>0)
+  {
+    //delay(1000);
+    Serial.print("k = ");Serial.println(k);
+    Affiche_date_heure(H);
+  }
+  //delay(1000);
   //Serial.println("Après return : ");Serial.println(buffer);
   //test =  GPS_msg_parse(buffer);
   /*Serial.print(" H.H.heure[0] = ");Serial.println(test.GPRMC.UTCtime);

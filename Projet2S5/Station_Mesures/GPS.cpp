@@ -43,7 +43,7 @@ char * GetGPS_MSG()
       while(Serial1.available())
       {  
          buffer[count] = Serial1.read();
-         //Serial.println(buffer[count]);
+         Serial.print(buffer[count]);
          if(buffer[count] == '\n' && buffer[count-1] == '\r' )
          {
               //Serial.println("Sortie en cours fdp : ");
@@ -52,7 +52,7 @@ char * GetGPS_MSG()
               Parse = 1;
               //Serial.print("Avnt return : ");Serial.print(buffer);
               char * test = strdup(buffer);
-              //Serial.print("test =  ");Serial.print(test);
+              Serial.print("test =  ");Serial.print(test);
               return test;   
          }
          count++;
@@ -172,23 +172,23 @@ NMEA GPS_msg_parse(char * buffer2)
    return stokageMsg;
   
 }
-bool Test_Synchro_GPS()
+bool Test_Synchro_GPS(NMEA Verif)
 {
-  if((int)stokageMsg.PMTK.flag == 3) 
+  if((int)Verif.PMTK.flag == 3) 
   {
-    //Serial.println("Message OK2!!!");
+    Serial.println("Synchronise");
     return true;
   }
   
-  else if(strcmp(stokageMsg.GPRMC.statut,"A") == 0)
+  else if(strcmp(Verif.GPRMC.statut,"A") == 0)
   {
-      //Serial.println("Message OK!!!");
+      Serial.println("Synchronise");
       return true;
   }
  
-  else if(strcmp(stokageMsg.GPGGA.id,"$GPGGA") == 0)
+  else if(strcmp(Verif.GPGGA.id,"$GPGGA") == 0)
   {
-    Serial.println("Message OK :(");
+    Serial.println("Synchronise");
     return false;
   }
   //else{Serial.println("nooooooooooooooooooooonnnnnnnnnnnnnnnnnnnnnnnnnn presque");}  
@@ -242,9 +242,9 @@ Horloge Extract_date_heure_from_GPS(char Date[6], char Heure[6])
     H.H.heure = (uint8_t)atoi(HeureFromGPS);
     H.H.minute = (uint8_t)atoi(MinFromGPS);
     H.H.seconde = (uint8_t)atoi(SecFromGPS);
-    Serial.print("H.H.heure = ");Serial.println(H.H.heure);
+    /*Serial.print("H.H.heure = ");Serial.println(H.H.heure);
     Serial.print("H.H.Minute = ");Serial.println(H.H.minute);
-    Serial.print("H.H.seconde = ");Serial.println(H.H.seconde);
+    Serial.print("H.H.seconde = ");Serial.println(H.H.seconde);*/
 
     /*extraction dela date*/
     
@@ -265,9 +265,9 @@ Horloge Extract_date_heure_from_GPS(char Date[6], char Heure[6])
     H.D.jour_mois = (uint8_t)atoi(jourMoisFromGPS);
     H.D.mois = (uint8_t)atoi(MoisFromGPS);
     H.D.annee = (uint8_t)atoi(anneeFromGPS);
-    Serial.println("H.D.annee =  ");Serial.println(H.D.annee);
+    /*Serial.println("H.D.annee =  ");Serial.println(H.D.annee);
     Serial.println("H.D.mois =  ");Serial.println(H.D.mois);
-    Serial.print("H.D.jour_mois=  ");Serial.println(H.D.jour_mois);
+    Serial.print("H.D.jour_mois=  ");Serial.println(H.D.jour_mois);*/
     H.D.jour_semaine = jour_semaine( H.D.jour_mois,H.D.mois,H.D.annee);
     //Serial.print("H.D.jour-semaine =  ");Serial.println(H.D.jour_semaine);
     return H;
