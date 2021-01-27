@@ -71,6 +71,56 @@ void Affiche_date_heure(Horloge H)
     Serial.println("    ");
 }
 
+pays fuseau_horaire_de_ref(int i)
+{
+  /*Definition Tableau pour la correction date_Heure_UTC en fonction du pays*/
+  pays France;
+  France.pays = "France";
+  France.ville = "Paris";
+  France.corr.minute = 0;
+  France.corr.heure = 1;
+   
+  pays Angleterre;
+  Angleterre.pays = "Royaume-Uni";
+  Angleterre.ville = "Londres";
+  Angleterre.corr.heure = 0;
+  Angleterre.corr.minute = 0;
+  
+  pays Russie;
+  Russie.pays = "Russie";
+  Russie.ville = "Moscou";
+  Russie.corr.heure = 3;
+  Russie.corr.minute = 0;
+  
+  pays USA;
+  USA.pays = "USA";
+  USA.ville = "New York";
+  USA.corr.heure = -5;
+  USA.corr.minute = 0;
+  
+  pays Canada;
+  Canada.pays = "Candada";
+  Canada.ville = "Montreal";
+  Canada.corr.heure = -5;
+  Canada.corr.minute = 0;
+  
+  pays Japon;
+  Japon.pays = "Japon";
+  Japon.ville = "Tokyo";
+  Japon.corr.heure = 9;
+  Japon.corr.minute = 0;
+  
+  pays Chine;
+  Chine.pays = "Chine";
+  Chine.ville = "Pekin";
+  Chine.corr.heure = 8;
+  Chine.corr.minute = 0;
+  
+  pays FuseauHoraire[7] = {France,Angleterre,Russie,USA,Canada,Japon,Chine};
+
+  return FuseauHoraire[i];
+}
+
 char * IndicateurEteHiv(Horloge H)
 {
   if(H.D.mois >= 3 && H.D.jour_mois >= 28 && H.H.heure >= 2)

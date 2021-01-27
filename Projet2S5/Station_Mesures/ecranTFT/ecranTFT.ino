@@ -1,58 +1,27 @@
 #include "TFT_Affichage.h"
 
 Horloge DatePres;
-extern char * EteHiv;
+
+extern char * EteHiv2;
 extern char * EteHivPres;
+extern pays PaysPres;
+
+ Horloge EteHiv;
+  /*EteHiv.H.heure = 0;
+  EteHiv.H.minute = 0;
+  EteHiv.H.seconde = 0;
+
+  EteHiv.D.jour_mois = 0;
+  EteHiv.D.mois =  0;
+  EteHiv.D.annee = 0;*/
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-
-  /*Definition Tableau pour la correction date_Heure_UTC en fonction du pays*/
-  pays France;
-  France.pays = "France";
-  France.ville = "Paris";
-  France.corr.minute = 0;
-  France.corr.heure = 1;
-   
-  pays Angleterre;
-  Angleterre.pays = "Royaume-Uni";
-  Angleterre.ville = "Londres";
-  Angleterre.corr.heure = 0;
-  Angleterre.corr.minute = 0;
+  //Serial1.begin(9600);
+  beginGPS();
   
-  pays Russie;
-  Russie.pays = "Russie";
-  Russie.ville = "Moscou";
-  Russie.corr.heure = 3;
-  Russie.corr.minute = 0;
-  
-  pays USA;
-  USA.pays = "USA";
-  USA.ville = "New York";
-  USA.corr.heure = -5;
-  USA.corr.minute = 0;
-  
-  pays Canada;
-  Canada.pays = "Candada";
-  Canada.ville = "Montreal";
-  Canada.corr.heure = -5;
-  Canada.corr.minute = 0;
-  
-  pays Japon;
-  Japon.pays = "Japon";
-  Japon.ville = "Tokyo";
-  Japon.corr.heure = 9;
-  Japon.corr.minute = 0;
-  
-  pays Chine;
-  Chine.pays = "Chine";
-  Chine.ville = "Pekin";
-  Chine.corr.heure = 8;
-  Chine.corr.minute = 0;
-  
-  pays FuseauHoraire[7] = {France,Angleterre,Russie,USA,Canada,Japon,Chine};
- //__________________________________
+  //__________________________________
   
   beginDs1307();
 
@@ -65,17 +34,10 @@ void setup() {
   Test.D.mois =  12;
   Test.D.annee = 21;
   
-  Horloge EteHiv;
-  EteHiv.H.heure = 0;
-  EteHiv.H.minute = 0;
-  EteHiv.H.seconde = 0;
-
-  EteHiv.D.jour_mois = 0;
-  EteHiv.D.mois =  0;
-  EteHiv.D.annee = 0;
+ 
   
   
-  Test = Correction_Heure_Date(Test, Chine, EteHiv);
+  //Test = Correction_Heure_Date(Test, Chine, EteHiv);
   
   setDateDs1307(Test);
   
@@ -88,15 +50,27 @@ void loop() {
    //delay(1000);
    Horloge Test = getDateDs1307();
    
+   pays Pays = fuseau_horaire_de_ref(6);
+   
+   Test = Correction_Heure_Date(Test, Pays, EteHiv);
    //Test.D.jour_semaine = jour_semaine(Test.D.jour_mois, Test.D.mois, Test.D.annee);
-   EteHiv = IndicateurEteHiv(Test);
+   EteHiv2 = IndicateurEteHiv(Test);
+
+   NMEA test;
+   char * buffer;
+  
+   buffer = GetGPS_MSG();
+   test = GPS_msg_parse(buffer);
 
    TFT_Affichage_Date(Test, DatePres);
    TFT_Affiche_Heure(Test, DatePres);
-   TFT_Affiche_EteHiv(EteHiv, EteHivPres);
+   TFT_Affiche_EteHiv(EteHiv2, EteHivPres);
+   TFT_Affiche_Etat_Synchro(test);
+   TFT_Affiche_ville_ref_fuseau_horaire(Pays, PaysPres);
 
    DatePres = Test;
-   EteHivPres = EteHiv;
+   EteHivPres = EteHiv2;
+   PaysPres = Pays;
    
    //delay(1000);
 }

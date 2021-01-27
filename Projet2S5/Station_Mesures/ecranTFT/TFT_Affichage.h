@@ -5,6 +5,7 @@
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <Adafruit_TFTLCD.h> // Hardware-specific library
 #include "RTC_DS1307.h"
+#include "GPS.h"
 
 
 #define LCD_CS A0 // Chip Select goes to Analog 3
@@ -30,6 +31,8 @@
 void TFT_Affichage_Date(Horloge H, Horloge P);
 void TFT_Affiche_Heure(Horloge H, Horloge P);
 void TFT_Affiche_EteHiv(char * EteHiv, char * EteHivPres);
+void TFT_Affiche_Etat_Synchro(NMEA Verif);
+void TFT_Affiche_ville_ref_fuseau_horaire(pays Pays, pays PaysPres);
 
 void TFT_setup();
 // Définition de type de données
