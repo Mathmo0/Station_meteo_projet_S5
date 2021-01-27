@@ -37,7 +37,7 @@ void loop() {
   
    Serial.println("TestLD");
    //Bsec Test;
-   unsigned long time_trigger = millis();
+   //unsigned long time_trigger = millis();
    affichage_Valeur_BME680(Test);
    Serial.println("TestLF");
    delay(1000);
