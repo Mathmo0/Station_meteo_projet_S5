@@ -53,7 +53,6 @@ typedef struct pays_UTC
 #define DS1307_I2C_ADDRESS 0x68
 
 
-
 // Fonctions prototypes
 
 void setDateDs1307(Horloge H);
@@ -66,6 +65,7 @@ uint8_t jour_semaine(uint8_t jour, uint8_t mois, uint8_t annee);
 Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, Horloge E);
 int Bissextile(Horloge H);
 char * IndicateurEteHiv(Horloge H);
+pays fuseau_horaire_de_ref(int i);
 
 
 #endif
