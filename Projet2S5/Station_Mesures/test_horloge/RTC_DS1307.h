@@ -41,8 +41,8 @@ typedef struct corrUTC
 
 typedef struct pays_UTC
 {
-  char pays;
-  char ville;
+  char * pays;
+  char * ville;
   corr corr;
 }pays;
 
@@ -63,6 +63,7 @@ void beginDs1307();
 uint8_t jour_semaine(uint8_t jour, uint8_t mois, uint8_t annee);
 Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, Horloge E);
 int Bissextile(Horloge H);
+pays FuseauHoraire(int choix);
 
 
 #endif

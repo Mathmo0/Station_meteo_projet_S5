@@ -204,3 +204,56 @@ Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, Horloge E)
   
   return H;
 }
+
+pays FuseauHoraire(int choix)
+{
+  pays France;
+  France.pays = "France";
+  France.ville = "Paris";
+  France.corr.minute = 0;
+  France.corr.heure = 1000;
+
+  pays Angleterre;
+  Angleterre.pays = "Royaume-Uni";
+  Angleterre.ville = "Londres";
+  Angleterre.corr.heure = 0;
+  Angleterre.corr.minute = 0;
+  
+  pays Russie;
+  Russie.pays = "Russie";
+  Russie.ville = "Moscou";
+  Russie.corr.heure = 3;
+  Russie.corr.minute = 0;
+  
+  pays USA;
+  USA.pays = "USA";
+  USA.ville = "New York";
+  USA.corr.heure = -5;
+  USA.corr.minute = 0;
+  
+  pays Canada;
+  Canada.pays = "Candada";
+  Canada.ville = "Montréal";
+  Canada.corr.heure = -5;
+  Canada.corr.minute = 0;
+  
+  pays Japon;
+  Japon.pays = "Japon";
+  Japon.ville = "Tokyo";
+  Japon.corr.heure = 9;
+  Japon.corr.minute = 0;
+  
+  pays Chine;
+  Chine.pays = "Chine";
+  Chine.ville = "Pékin";
+  Chine.corr.heure = 8;
+  Chine.corr.minute = 0;
+  
+  pays FuseauHoraire[7] = {France,Angleterre,Russie,USA,Canada,Japon,Chine};  
+  /*Serial.println("Fuseau Horaire pays heure  = ");Serial.println(Chine.corr.heure);
+  Serial.println("Fuseau Horaire pays minute  = ");Serial.println(France.corr.minute);*/
+  
+  Serial.println("Fuseau Horaire pays = ");Serial.println(FuseauHoraire[choix].corr.heure);
+  int choix2 = choix%7;
+  return France;//FuseauHoraire[choix2];
+}

@@ -60,7 +60,7 @@ void loop() {
 
    NMEA test;
    char * buffer;
-  
+ 
    buffer = GetGPS_MSG();
    test = GPS_msg_parse(buffer);
 

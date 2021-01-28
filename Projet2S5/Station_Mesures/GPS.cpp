@@ -11,7 +11,7 @@
 #include <string.h>
 #include <stdio.h>
 //#include "C:\Users\maxim\Documents\station-meteo-projet-s5\Projet2S5\Station_Mesures\test_horloge\RTC_DS1307.h"
-extern int testH;
+//extern int testH;
  int count = 0;
  const int tailleMAx = 100;
  char buffer[tailleMAx];
@@ -38,12 +38,12 @@ char * GetGPS_MSG()
   }  
   else if(strlen(buffer)!= 0)
   {
-    reset();
+    //reset();
   }   
       while(Serial1.available())
       {  
          buffer[count] = Serial1.read();
-         Serial.print(buffer[count]);
+         //Serial.print(buffer[count]); //Le laisser sinon la fonction ne fonctionne plus
          if(buffer[count] == '\n' && buffer[count-1] == '\r' )
          {
               //Serial.println("Sortie en cours fdp : ");
@@ -52,7 +52,7 @@ char * GetGPS_MSG()
               Parse = 1;
               //Serial.print("Avnt return : ");Serial.print(buffer);
               char * test = strdup(buffer);
-              Serial.print("test =  ");Serial.print(test);
+              //Serial.print("test =  ");Serial.print(test);
               return test;   
          }
          count++;
@@ -62,7 +62,7 @@ char * GetGPS_MSG()
          }
           //delay(200); 
       }
-  Serial.println(buffer);
+  //Serial.println(buffer);
   //return buffer ; 
 }
 
@@ -113,7 +113,7 @@ NMEA GPS_msg_parse(char * buffer2)
       stokageMsg.GPRMC.date = parsermsg;
       parsermsg = strtok (NULL, ", *");//mode (magnetic variation et Est/West indicator sont sauté car on a aucune valeur)
       stokageMsg.GPRMC.mode = parsermsg;
-      testH++;
+      //testH++;
       /*Serial.print(" stokageMsg.GPRMC.id = ");Serial.println(stokageMsg.GPRMC.id);
       Serial.print(" stokageMsg.GPRMC.UTCtime = ");Serial.println(stokageMsg.GPRMC.UTCtime);
       Serial.print(" stokageMsg.GPRMC.statut = ");Serial.println(stokageMsg.GPRMC.statut);
@@ -174,24 +174,27 @@ NMEA GPS_msg_parse(char * buffer2)
 }
 bool Test_Synchro_GPS(NMEA Verif)
 {
-  if((int)Verif.PMTK.flag == 3) 
+  /*if((int)Verif.PMTK.flag == 3) 
   {
     Serial.println("Synchronise");
     return true;
   }
   
-  else if(strcmp(Verif.GPRMC.statut,"A") == 0)
+  else*/ if(strcmp(Verif.GPRMC.statut,"A") == 0)
   {
-      Serial.println("Synchronise");
+      //Serial.println("Synchronise");
       return true;
   }
  
   else if(strcmp(Verif.GPGGA.id,"$GPGGA") == 0)
   {
-    Serial.println("Synchronise");
+    //Serial.println("Synchronise");
     return false;
   }
-  //else{Serial.println("nooooooooooooooooooooonnnnnnnnnnnnnnnnnnnnnnnnnn presque");}  
+  else
+  {
+    return false;
+  }  
 }
 
 void Choix_Msg_NMEA(int c)

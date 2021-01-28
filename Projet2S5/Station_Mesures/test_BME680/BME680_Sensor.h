@@ -12,5 +12,7 @@
 
 void checkIaqSensorStatus(Bsec verif);
 void errLeds();
-void beginBME680(Bsec init); 
+void beginBME680(); 
 void affichage_Valeur_BME680(Bsec val);
+void updateValeur();
+Bsec getBME680();

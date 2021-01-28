@@ -11,7 +11,7 @@
 
 #include <Arduino.h>
 #include "BME680_Sensor.h"
-
+Bsec BME680;
 
 void checkIaqSensorStatus(Bsec verif)
 {
@@ -62,12 +62,13 @@ void errLeds(void)
   Serial.println("ErreurLedClignote");
 }
 
-void beginBME680(Bsec Start)
+void beginBME680()
 {
-  Start.begin(BME680_I2C_ADDR_PRIMARY, Wire);
-  Serial.println("fin_init");
-  //Start.updateSubscription(sensorList, 10, BSEC_SAMPLE_RATE_LP); 
-  //checkIaqSensorStatus(Start);
+  Wire.begin();
+  BME680.begin(BME680_I2C_ADDR_PRIMARY, Wire);
+  //Serial.println("fin_init");
+  //BME680.updateSubscription(sensorList, 10, BSEC_SAMPLE_RATE_LP); 
+  checkIaqSensorStatus(BME680);
 }
 
 void affichage_Valeur_BME680(Bsec val)
@@ -94,3 +95,26 @@ void affichage_Valeur_BME680(Bsec val)
     }  
     Serial.println("FIN_Affichage");
 }
+
+void updateValeur()
+{
+ 
+   bsec_virtual_sensor_t sensorList[10] = {
+    BSEC_OUTPUT_RAW_TEMPERATURE,
+    BSEC_OUTPUT_RAW_PRESSURE,
+    BSEC_OUTPUT_RAW_HUMIDITY,
+    BSEC_OUTPUT_RAW_GAS,
+    BSEC_OUTPUT_IAQ,
+    BSEC_OUTPUT_STATIC_IAQ,
+    BSEC_OUTPUT_CO2_EQUIVALENT,
+    BSEC_OUTPUT_BREATH_VOC_EQUIVALENT,
+    BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_TEMPERATURE,
+    BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_HUMIDITY,
+  }; 
+   checkIaqSensorStatus(BME680);
+  BME680.updateSubscription(sensorList, 10, BSEC_SAMPLE_RATE_LP);   
+}
+Bsec getBME680()
+{
+  return BME680;
+} 
