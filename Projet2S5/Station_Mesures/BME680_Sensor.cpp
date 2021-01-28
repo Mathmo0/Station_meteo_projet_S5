@@ -15,11 +15,9 @@ Bsec BME680;
 
 void checkIaqSensorStatus(Bsec verif)
 {
-  Serial.println("Début_fonction_Check");
   String output;
   if (verif.status != BSEC_OK)
   {
-    Serial.println("entrer1B");
     if (verif.status < BSEC_OK) {
       output = "BSEC error code : " + String(verif.status);
       Serial.println(output);
@@ -33,7 +31,6 @@ void checkIaqSensorStatus(Bsec verif)
 
   if (verif.bme680Status != BME680_OK) 
   {
-    Serial.println("entrer2B");
     if (verif.bme680Status < BME680_OK) 
     {
       output = "BME680 error code : " + String(verif.bme680Status);
@@ -44,12 +41,10 @@ void checkIaqSensorStatus(Bsec verif)
     
     else
     {
-      Serial.println("entrerElseB");
       output = "BME680 warning code : " + String(verif.bme680Status);
       Serial.println(output);
     }
   }
-  Serial.println("FINNNN_fonction_check");
 }
 
 void errLeds(void)
@@ -90,7 +85,6 @@ void affichage_Valeur_BME680(Bsec * val)
 {
     if (val->status == BSEC_OK) // If new data is available
     { 
-      Serial.println("val.run : ok !!!!");
       Serial.print("La pression vaut : ");Serial.println(val->pressure);
       Serial.print("Le taux d'humidité vaut : ");Serial.println(val->humidity);
       Serial.print("Le l'IAQ vaut : ");Serial.println(val->iaq);
@@ -104,25 +98,6 @@ void affichage_Valeur_BME680(Bsec * val)
       Serial.println("val->statut : Erreur ");
     }  
 }
-
-/*void updateValeur()
-{
- 
-   bsec_virtual_sensor_t sensorList[10] = {
-    BSEC_OUTPUT_RAW_TEMPERATURE,
-    BSEC_OUTPUT_RAW_PRESSURE,
-    BSEC_OUTPUT_RAW_HUMIDITY,
-    BSEC_OUTPUT_RAW_GAS,
-    BSEC_OUTPUT_IAQ,
-    BSEC_OUTPUT_STATIC_IAQ,
-    BSEC_OUTPUT_CO2_EQUIVALENT,
-    BSEC_OUTPUT_BREATH_VOC_EQUIVALENT,
-    BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_TEMPERATURE,
-    BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_HUMIDITY,
-  }; 
-   checkIaqSensorStatus(BME680);
-  BME680.updateSubscription(sensorList, 10, BSEC_SAMPLE_RATE_LP);   
-}*/
 
 Bsec * getBME680()
 {

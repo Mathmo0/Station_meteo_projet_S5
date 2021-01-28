@@ -39,7 +39,7 @@ pays FuseauHoraire = fuseau_horaire_de_ref(0); // Fuseau Horaire de base : Paris
 #define BASE_TEMPS_TIMER1_05s 57723U
 #define BASE_TEMPS_TIMER1_1s 49911U
 #define Led2_pin LED_BUILTIN
-#define T_EVNT1 3600*4 // Période de gestion de l'événémént 1
+#define T_EVNT1 3600*4*2 // Période de gestion de l'événémént 1
 #define T_EVNT2 6 // Période de gestion de l'événémént 2
 #define T_EVNT3 2
 volatile int T_Time_Out_Evenement1 = 0;
@@ -126,8 +126,7 @@ void loop()
   bool synchro = Test_Synchro_GPS(msgFromGpsParser);
   
   if (T_Time_Out_Evenement1 <= 0)
-  {  
-    Serial.println("Dans Evenement 1 vefuzcuzbi");  
+  {   
     if(synchro == true)
     {
       H = Extract_date_heure_from_GPS(msgFromGpsParser.GPRMC.date,msgFromGpsParser.GPRMC.UTCtime);
@@ -142,11 +141,9 @@ void loop()
   
   if (T_Time_Out_Evenement2 <= 0)
   {
-    Serial.println("Dans Evenement 2");
-    AffichageBME680 = getBME680();
-      
+    AffichageBME680 = getBME680();  
+     
     T_Time_Out_Evenement2 = T_EVNT2;
-    
   }
 
   if (T_Time_Out_Evenement3 <= 0)
@@ -161,8 +158,7 @@ void loop()
           H = Correction_Heure_Date(H,FuseauHoraire, IndicateurEteHIver);  
           setDateDs1307(H);
           k++;
-        }
-        T_Time_Out_Evenement3 = T_EVNT3;
+        }     
       }
       else
       {
@@ -184,6 +180,7 @@ void loop()
       {
         affichage_Valeur_BME680(AffichageBME680);
       }
+      T_Time_Out_Evenement3 = T_EVNT3;
       Serial.println("______________________ Fin Affichage ________________________");
       
   }

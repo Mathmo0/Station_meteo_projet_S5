@@ -1,5 +1,8 @@
 // Fichier BME680_Sensor.h
 
+#ifndef __BME680__
+#define __BME680__
+
 
 #include <Arduino.h>
 #include <Wire.h>
@@ -14,5 +17,6 @@ void checkIaqSensorStatus(Bsec verif);
 void errLeds();
 void beginBME680(); 
 void affichage_Valeur_BME680(Bsec * val);
-void updateValeur();
 Bsec * getBME680();
+
+#endif
