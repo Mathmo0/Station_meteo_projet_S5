@@ -2,12 +2,13 @@
 
 Horloge DatePres;
 
-extern char * EteHiv2;
+extern char * EEteHiv2;
 extern char * EteHivPres;
-extern pays PaysPres;
 
- Horloge EteHiv;
-  /*EteHiv.H.heure = 0;
+pays PaysPres;
+
+Horloge EteHiv;
+/*EteHiv.H.heure = 0;
   EteHiv.H.minute = 0;
   EteHiv.H.seconde = 0;
 
@@ -41,6 +42,7 @@ void setup() {
   
   setDateDs1307(Test);
   
+  
   TFT_setup();
 }
 
@@ -54,7 +56,7 @@ void loop() {
    
    Test = Correction_Heure_Date(Test, Pays, EteHiv);
    //Test.D.jour_semaine = jour_semaine(Test.D.jour_mois, Test.D.mois, Test.D.annee);
-   EteHiv2 = IndicateurEteHiv(Test);
+   EEteHiv2 = IndicateurEteHiv(Test);
 
    NMEA test;
    char * buffer;
@@ -64,12 +66,12 @@ void loop() {
 
    TFT_Affichage_Date(Test, DatePres);
    TFT_Affiche_Heure(Test, DatePres);
-   TFT_Affiche_EteHiv(EteHiv2, EteHivPres);
+   TFT_Affiche_EteHiv(EEteHiv2, EteHivPres);
    TFT_Affiche_Etat_Synchro(test);
    TFT_Affiche_ville_ref_fuseau_horaire(Pays, PaysPres);
 
    DatePres = Test;
-   EteHivPres = EteHiv2;
+   EteHivPres = EEteHiv2;
    PaysPres = Pays;
    
    //delay(1000);
