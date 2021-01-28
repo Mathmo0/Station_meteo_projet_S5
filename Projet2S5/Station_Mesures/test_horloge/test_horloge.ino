@@ -6,49 +6,7 @@ void setup()
   Serial.begin(9600);
   
   /*Definition Tableau pour la correction date_Heure_UTC en fonction du pays*/
-  pays France;
-  France.pays = "France";
-  France.ville = "Paris";
-  France.corr.minute = 0;
-  France.corr.heure = 1;
-   
-  pays Angleterre;
-  Angleterre.pays = "Royaume-Uni";
-  Angleterre.ville = "Londres";
-  Angleterre.corr.heure = 0;
-  Angleterre.corr.minute = 0;
   
-  pays Russie;
-  Russie.pays = "Russie";
-  Russie.ville = "Moscou";
-  Russie.corr.heure = 3;
-  Russie.corr.minute = 0;
-  
-  pays USA;
-  USA.pays = "USA";
-  USA.ville = "New York";
-  USA.corr.heure = -5;
-  USA.corr.minute = 0;
-  
-  pays Canada;
-  Canada.pays = "Candada";
-  Canada.ville = "Montréal";
-  Canada.corr.heure = -5;
-  Canada.corr.minute = 0;
-  
-  pays Japon;
-  Japon.pays = "Japon";
-  Japon.ville = "Tokyo";
-  Japon.corr.heure = 9;
-  Japon.corr.minute = 0;
-  
-  pays Chine;
-  Chine.pays = "Chine";
-  Chine.ville = "Pékin";
-  Chine.corr.heure = 8;
-  Chine.corr.minute = 0;
-  
-  pays FuseauHoraire[7] = {France,Angleterre,Russie,USA,Canada,Japon,Chine};
   
 
  //__________________________________
@@ -72,8 +30,11 @@ void setup()
   EteHiv.D.jour_mois = 0;
   EteHiv.D.mois =  0;
   EteHiv.D.annee = 0;
+
+  pays FuseauHoraireDuPays = FuseauHoraire(1); //De base  Le Fuseau hraire est défini sur Paris 
+  Serial.print("ville  = ");Serial.println(FuseauHoraireDuPays.pays); 
   
-  Test = Correction_Heure_Date(Test, Chine, EteHiv);
+  Test = Correction_Heure_Date(Test,FuseauHoraireDuPays, EteHiv);
   
   Test.D.jour_semaine = jour_semaine(Test.D.jour_mois, Test.D.mois, Test.D.annee);
   

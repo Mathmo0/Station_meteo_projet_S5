@@ -28,22 +28,23 @@
 
 // Variables globales
 
-int testH = 0;
 char * buffer2;
-//bool synchro = false;
 NMEA msgFromGpsParser;
+int k = 0;
 
-Bsec capteurBME680;
+pays FuseauHoraire = fuseau_horaire_de_ref(0); // Fuseau Horaire de base : Paris
 
 /*varibale poru le Timer1 : */
 
 #define BASE_TEMPS_TIMER1_05s 57723U
 #define BASE_TEMPS_TIMER1_1s 49911U
 #define Led2_pin LED_BUILTIN
-#define T_EVNT1 10 // Période de gestion de l'événémént 1
-#define T_EVNT2 3 // Période de gestion de l'événémént 2
+#define T_EVNT1 3600*4 // Période de gestion de l'événémént 1
+#define T_EVNT2 6 // Période de gestion de l'événémént 2
+#define T_EVNT3 2
 volatile int T_Time_Out_Evenement1 = 0;
 volatile int T_Time_Out_Evenement2 = 0;
+volatile int T_Time_Out_Evenement3 =0;
 
 /*--------------------------------------------------------------------------------------------*/
 // Routine d'IT TImer1 sur Overflow registre de comptage
@@ -54,6 +55,7 @@ ISR(TIMER1_OVF_vect)
 
   T_Time_Out_Evenement1 --;
   T_Time_Out_Evenement2 --;
+  T_Time_Out_Evenement3 --;
   
   TIFR1 |= 0B00000001;
   TCNT1 = BASE_TEMPS_TIMER1_05s;
@@ -81,6 +83,7 @@ void setup(void)
   setDateDs1307(H);
   
   /*Partie initialisation GPS : */
+  
   beginGPS();
   Choix_Msg_NMEA(2);
   //char * buffer2;
@@ -88,26 +91,13 @@ void setup(void)
   //NMEA msgFromGpsParser;
 
   /*Initialisation du capteurBME680 : */
-  Wire.begin();
-  
-  capteurBME680.begin(BME680_I2C_ADDR_PRIMARY, Wire);
-  checkIaqSensorStatus(capteurBME680);
-  bsec_virtual_sensor_t sensorList[10] = {
-    BSEC_OUTPUT_RAW_TEMPERATURE,
-    BSEC_OUTPUT_RAW_PRESSURE,
-    BSEC_OUTPUT_RAW_HUMIDITY,
-    BSEC_OUTPUT_RAW_GAS,
-    BSEC_OUTPUT_IAQ,
-    BSEC_OUTPUT_STATIC_IAQ,
-    BSEC_OUTPUT_CO2_EQUIVALENT,
-    BSEC_OUTPUT_BREATH_VOC_EQUIVALENT,
-    BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_TEMPERATURE,
-    BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_HUMIDITY,
-  }; 
+  //Wire.begin();
 
-  capteurBME680.updateSubscription(sensorList, 10, BSEC_SAMPLE_RATE_LP); 
-  checkIaqSensorStatus(capteurBME680);
+  //Bsec AffichageBME680;
   
+  //beginBME680();
+  //updateValeur();
+  //AffichageBME680 = getBME680();
   /*Partie initialisation Timer1 : */
   
   noInterrupts();
@@ -124,50 +114,77 @@ void setup(void)
 /*--------------------------------------------------------------------------------------------*/
 void loop() 
 {
+  Bsec AffichageBME680;
   
   Horloge H;
-  Bsec rafraichissement;
-  H = getDateDs1307();
-  Affiche_date_heure(H);
-  bool synchro = false;
+  Horloge EteHiv;
+  int IndicateurEteHIver;
+  IndicateurEteHIver = IndicateurEteHiv(H);
   
-  /*while(synchro == false && strcmp(msgFromGpsParser.GPRMC.id,"$GPRMC")==1)
-  {
-    Serial.println("On est dans la boucle : ");
-    buffer2 = GetGPS_MSG();
-    msgFromGpsParser = GPS_msg_parse(buffer2);
-    synchro = Test_Synchro_GPS(msgFromGpsParser);
-    if(synchro == true && strcmp(msgFromGpsParser.GPRMC.id,"$GPRMC") == 1)
-    {
-      Serial.println("WOWOWOWOWO : ");
-      //H = getDateDs1307();
-      H = Extract_date_heure_from_GPS(msgFromGpsParser.GPRMC.date,msgFromGpsParser.GPRMC.UTCtime);
-      Affiche_date_heure(H);
-    }
-  }*/
+  buffer2 = GetGPS_MSG();
+  msgFromGpsParser = GPS_msg_parse(buffer2);  
+  bool synchro = Test_Synchro_GPS(msgFromGpsParser);
   
   if (T_Time_Out_Evenement1 <= 0)
-  {
-    
-    buffer2 = GetGPS_MSG();
-    msgFromGpsParser = GPS_msg_parse(buffer2);
-    synchro = Test_Synchro_GPS(msgFromGpsParser);
+  {  
+    Serial.println("Dans Evenement 1 vefuzcuzbi");  
     if(synchro == true)
     {
       H = Extract_date_heure_from_GPS(msgFromGpsParser.GPRMC.date,msgFromGpsParser.GPRMC.UTCtime);
+      IndicateurEteHIver = IndicateurEteHiv(H);  
+      H = Correction_Heure_Date(H,FuseauHoraire, IndicateurEteHIver);  
       setDateDs1307(H);
     } 
-    T_Time_Out_Evenement1 = T_EVNT1;*/
-  //}
-  Serial.println("______________________en attente________________________");
+    
+    T_Time_Out_Evenement1 = T_EVNT1;
+  }
+ 
   
   if (T_Time_Out_Evenement2 <= 0)
   {
-    Serial.print("Dans Evenement 2");
-    affichage_Valeur_BME680(capteurBME680);
+    Serial.println("Dans Evenement 2");
+    //AffichageBME680 = getBME680();
+      
     T_Time_Out_Evenement2 = T_EVNT2;
     
   }
-  delay(1000);
 
+  if (T_Time_Out_Evenement3 <= 0)
+  {
+       if (synchro == true)
+      {
+        Serial.println("Synchronisé");
+        if(k  <1)
+        {
+          H = Extract_date_heure_from_GPS(msgFromGpsParser.GPRMC.date,msgFromGpsParser.GPRMC.UTCtime); 
+          IndicateurEteHIver = IndicateurEteHiv(H);  
+          H = Correction_Heure_Date(H,FuseauHoraire, IndicateurEteHIver);  
+          setDateDs1307(H);
+          k++;
+        }
+        T_Time_Out_Evenement3 = T_EVNT3;
+      }
+      else
+      {
+        Serial.println("Non Synchronisé");
+      }
+      H = getDateDs1307();
+      Affiche_date_heure(H);
+      if(IndicateurEteHIver == 0)
+      {
+        Serial.println("Nous somme en hiver ");
+      }
+      else
+      {
+        Serial.println("Nous somme en été ");
+      }
+      
+      Serial.print("Fuseau Horaire utilisé : ");Serial.print(FuseauHoraire.ville);Serial.print(", ");Serial.println(FuseauHoraire.pays);
+      affichage_Valeur_BME680(AffichageBME680);
+      Serial.println("______________________ Fin Affichage ________________________");
+      
+  }
+  //affichage_Valeur_BME680(rafraichissement);
+  //delay(1000);
+   
 }

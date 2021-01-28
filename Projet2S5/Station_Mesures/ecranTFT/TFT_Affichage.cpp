@@ -10,6 +10,7 @@ void TFT_setup()
 {
   Serial.begin(9600);  
   tft.reset();
+  tft.fillScreen(WHITE);
   
 
   uint16_t identifier = tft.readID();

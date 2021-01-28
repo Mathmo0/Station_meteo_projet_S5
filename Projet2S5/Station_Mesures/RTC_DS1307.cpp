@@ -52,7 +52,7 @@ Horloge getDateDs1307()
 void Affiche_date_heure(Horloge H)
 {
     char * jour[] = {"Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"};
-    char * mois[]= {"Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"};
+    char * mois[]= {"Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre"};
 
     Serial.print(jour[H.D.jour_semaine-1]);
     Serial.print("    ");
@@ -71,15 +71,65 @@ void Affiche_date_heure(Horloge H)
     Serial.println("    ");
 }
 
-char * IndicateurEteHiv(Horloge H)
+pays fuseau_horaire_de_ref(int i)
+{
+  /*Definition Tableau pour la correction date_Heure_UTC en fonction du pays*/
+  pays France;
+  France.pays = "France";
+  France.ville = "Paris";
+  France.corr.minute = 0;
+  France.corr.heure = 1;
+   
+  pays Angleterre;
+  Angleterre.pays = "Royaume-Uni";
+  Angleterre.ville = "Londres";
+  Angleterre.corr.heure = 0;
+  Angleterre.corr.minute = 0;
+  
+  pays Russie;
+  Russie.pays = "Russie";
+  Russie.ville = "Moscou";
+  Russie.corr.heure = 3;
+  Russie.corr.minute = 0;
+  
+  pays USA;
+  USA.pays = "USA";
+  USA.ville = "New York";
+  USA.corr.heure = -5;
+  USA.corr.minute = 0;
+  
+  pays Canada;
+  Canada.pays = "Candada";
+  Canada.ville = "Montreal";
+  Canada.corr.heure = -5;
+  Canada.corr.minute = 0;
+  
+  pays Japon;
+  Japon.pays = "Japon";
+  Japon.ville = "Tokyo";
+  Japon.corr.heure = 9;
+  Japon.corr.minute = 0;
+  
+  pays Chine;
+  Chine.pays = "Chine";
+  Chine.ville = "Pekin";
+  Chine.corr.heure = 8;
+  Chine.corr.minute = 0;
+  
+  pays FuseauHoraire[7] = {France,Angleterre,Russie,USA,Canada,Japon,Chine};
+
+  return FuseauHoraire[i];
+}
+
+int IndicateurEteHiv(Horloge H)
 {
   if(H.D.mois >= 3 && H.D.jour_mois >= 28 && H.H.heure >= 2)
     {
-      EteHiv = "été";
+      EteHiv = 1;//ete;
     }
     else
     {
-      EteHiv = "hiver";
+      EteHiv =0;// hiver;
     }
 
     return EteHiv;
@@ -113,7 +163,7 @@ uint8_t jour_semaine(uint8_t jour, uint8_t mois, uint8_t annee)
 int Bissextile(Horloge H)
 {
   int A = H.D.annee + 2000;
-  if(A%4 == 0 && A%100 != 100)
+  if(A%4 == 0 && A%100 != 0)
   {
     return 1;
   }
@@ -127,18 +177,18 @@ int Bissextile(Horloge H)
   }
 }
 
-Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, Horloge E)
+Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, int E)
 {
-  if(H.D.mois == 3 && H.D.jour_mois == 28 && H.H.heure == 2)
+  if(H.D.mois >= 3 && H.D.jour_mois >= 28 && H.H.heure >= 2)
   {
-    E.H.heure = 1;
+    E = 1;
   }
-  else if(H.D.mois == 10 && H.D.jour_mois == 31 && H.H.heure == 3)
+  else if(H.D.mois >= 10 && H.D.jour_mois >= 31 && H.H.heure >= 3)
   {
-    E.H.heure = -1;
+    E = -1;
   }
   
-  if((H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E.H.heure) >= 24)
+  if((H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E) >= 24)
   {
     if(H.D.mois == 1 || H.D.mois == 3 || H.D.mois == 5 || H.D.mois == 7 || H.D.mois == 8 || H.D.mois == 10 || H.D.mois == 12)
     {
@@ -147,7 +197,7 @@ Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, Horloge E)
         H.D.jour_mois = 1;
         if(H.D.mois == 12)
         {
-          H.D.mois = 01;
+          H.D.mois = 1;
           ++H.D.annee;
         }
         else
@@ -160,38 +210,23 @@ Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, Horloge E)
         ++H.D.jour_mois;
       }
     }
-    else if(H.D.mois == 02)
+    else if(H.D.mois == 2)
     {
       if(Bissextile(H))
       {
         if(H.D.jour_mois == 29)
         {
           H.D.jour_mois = 1;
-          if(H.D.mois == 12)
-          {
-            H.D.mois = 01;
-            ++H.D.annee;
-          }
-          else
-          {
-            ++H.D.mois;
-          }
+          H.D.mois = 3;
         }
+       
       }
       else
       {
         if(H.D.jour_mois == 28)
         {
           H.D.jour_mois = 1;
-          if(H.D.mois == 12)
-          {
-            H.D.mois = 01;
-            ++H.D.annee;
-          }
-          else
-          {
-            ++H.D.mois;
-          }
+          H.D.mois = 3;
         }
       }
     }
@@ -200,15 +235,7 @@ Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, Horloge E)
       if(H.D.jour_mois == 30)
       {
         H.D.jour_mois = 1;
-        if(H.D.mois == 12)
-        {
-          H.D.mois = 01;
-          ++H.D.annee;
-        }
-        else
-        {
-          ++H.D.mois;
-        }
+        ++H.D.mois;
       }
       else
       {
@@ -217,8 +244,8 @@ Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, Horloge E)
     }
   }
   
-  H.H.heure = (H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E.H.heure)%24;
-  H.H.minute = (H.H.minute + pays_UTC.corr.minute + E.H.minute)%60;
+  H.H.heure = (H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E)%24;
+  H.H.minute = (H.H.minute + pays_UTC.corr.minute + E)%60;
   
   return H;
 }

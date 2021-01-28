@@ -29,19 +29,19 @@ void loop() {
   Horloge H;
   NMEA test;
   char * buffer;
-  if(Test_Synchro_GPS(test) == false)
-  {
+  //if(Test_Synchro_GPS(test) == false)
+  //{
     buffer = GetGPS_MSG();
     test = GPS_msg_parse(buffer);
-  }
+  //}
   
-  else if(Test_Synchro_GPS(test) == true){
+  //else if(Test_Synchro_GPS(test) == true){
   
-  //H = Extract_date_heure_from_GPS(test.GPRMC.date,test.GPRMC.UTCtime);
-  H = getDateDs1307();
-  Affiche_date_heure(H);
-  k++;
-  }
+  H = Extract_date_heure_from_GPS(test.GPRMC.date,test.GPRMC.UTCtime);
+  //H = getDateDs1307();
+  //Affiche_date_heure(H);
+  //k++;
+  //}
   /*if(k>0)
   {
     //delay(1000);
