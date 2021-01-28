@@ -181,9 +181,10 @@ void loop()
       
       Serial.print("Fuseau Horaire utilisé : ");Serial.print(FuseauHoraire.ville);Serial.print(", ");Serial.println(FuseauHoraire.pays);
 
-      //if(synchro == true){
-      affichage_Valeur_BME680(AffichageBME680);//}
->>>>>>> eddbc86793a0fff435ffafd5dabf5bc3321f7acb
+      if(k >= 1)
+      {
+        affichage_Valeur_BME680(AffichageBME680);
+      }
       Serial.println("______________________ Fin Affichage ________________________");
       
   }
