@@ -6,6 +6,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include "RTC_DS1307.h"
+#include "Calendrier.h"
 
 
 // Définition des types de données pour gestion des données GPS

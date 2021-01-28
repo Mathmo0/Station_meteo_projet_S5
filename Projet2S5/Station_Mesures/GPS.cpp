@@ -10,7 +10,7 @@
 #include "GPS.h"
 #include <string.h>
 #include <stdio.h>
-//#include "C:\Users\maxim\Documents\station-meteo-projet-s5\Projet2S5\Station_Mesures\test_horloge\RTC_DS1307.h"
+
 //extern int testH;
  int count = 0;
  const int tailleMAx = 100;
