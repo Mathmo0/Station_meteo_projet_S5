@@ -14,8 +14,8 @@
 #include "RTC_DS1307.h"
 
 
-char * EteHiv;
-char * EteHivPres;
+char * HivEte;
+//char * HivEtePres;
 
 void setDateDs1307(Horloge H)
 {
@@ -125,14 +125,14 @@ char * IndicateurEteHiv(Horloge H)
 {
   if(H.D.mois >= 3 && H.D.jour_mois >= 28 && H.H.heure >= 2)
     {
-      EteHiv = "ete";
+      HivEte = "ete";
     }
     else
     {
-      EteHiv = "hiver";
+     HivEte = "hiver";
     }
 
-    return EteHiv;
+    return HivEte;
 }
 
 uint8_t decToBcd(uint8_t val)
@@ -177,18 +177,18 @@ int Bissextile(Horloge H)
   }
 }
 
-Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, Horloge E)
+Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, int E)
 {
   if(H.D.mois == 3 && H.D.jour_mois == 28 && H.H.heure == 2)
   {
-    E.H.heure = 1;
+    E = 1;
   }
   else if(H.D.mois == 10 && H.D.jour_mois == 31 && H.H.heure == 3)
   {
-    E.H.heure = -1;
+    E = -1;
   }
   
-  if((H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E.H.heure) >= 24)
+  if((H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E) >= 24)
   {
     if(H.D.mois == 1 || H.D.mois == 3 || H.D.mois == 5 || H.D.mois == 7 || H.D.mois == 8 || H.D.mois == 10 || H.D.mois == 12)
     {
@@ -267,8 +267,8 @@ Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, Horloge E)
     }
   }
   
-  H.H.heure = (H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E.H.heure)%24;
-  H.H.minute = (H.H.minute + pays_UTC.corr.minute + E.H.minute)%60;
+  H.H.heure = (H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E)%24;
+  H.H.minute = (H.H.minute + pays_UTC.corr.minute + E)%60;
   
   return H;
 }

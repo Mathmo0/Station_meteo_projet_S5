@@ -10,7 +10,11 @@
 #include "GPS.h"
 #include <string.h>
 #include <stdio.h>
+<<<<<<< HEAD
 //#include "RTC_DS1307.h"
+=======
+//#include "C:\Users\maxim\Documents\station-meteo-projet-s5\Projet2S5\Station_Mesures\test_horloge\RTC_DS1307.h"
+>>>>>>> fc2b06b5d4a877ff586495d0aaba338f62e85448
 //extern int testH;
  int count = 0;
  const int tailleMAx = 100;
@@ -38,12 +42,20 @@ char * GetGPS_MSG()
   }  
   else if(strlen(buffer)!= 0)
   {
+<<<<<<< HEAD
     reset();
+=======
+    //reset();
+>>>>>>> fc2b06b5d4a877ff586495d0aaba338f62e85448
   }   
       while(Serial1.available())
       {  
          buffer[count] = Serial1.read();
+<<<<<<< HEAD
          Serial.print(buffer[count]);
+=======
+         //Serial.print(buffer[count]); //Le laisser sinon la fonction ne fonctionne plus
+>>>>>>> fc2b06b5d4a877ff586495d0aaba338f62e85448
          if(buffer[count] == '\n' && buffer[count-1] == '\r' )
          {
               //Serial.println("Sortie en cours fdp : ");
@@ -52,7 +64,11 @@ char * GetGPS_MSG()
               Parse = 1;
               //Serial.print("Avnt return : ");Serial.print(buffer);
               char * test = strdup(buffer);
+<<<<<<< HEAD
               Serial.print("test =  ");Serial.print(test);
+=======
+              //Serial.print("test =  ");Serial.print(test);
+>>>>>>> fc2b06b5d4a877ff586495d0aaba338f62e85448
               return test;   
          }
          count++;
@@ -62,7 +78,11 @@ char * GetGPS_MSG()
          }
           //delay(200); 
       }
+<<<<<<< HEAD
   Serial.println(buffer);
+=======
+  //Serial.println(buffer);
+>>>>>>> fc2b06b5d4a877ff586495d0aaba338f62e85448
   //return buffer ; 
 }
 
@@ -174,24 +194,44 @@ NMEA GPS_msg_parse(char * buffer2)
 }
 bool Test_Synchro_GPS(NMEA Verif)
 {
+<<<<<<< HEAD
   if((int)Verif.PMTK.flag == 3) 
+=======
+  /*if((int)Verif.PMTK.flag == 3) 
+>>>>>>> fc2b06b5d4a877ff586495d0aaba338f62e85448
   {
     Serial.println("Synchronise");
     return true;
   }
   
+<<<<<<< HEAD
   else if(strcmp(Verif.GPRMC.statut,"A") == 0)
   {
       Serial.println("Synchronise");
+=======
+  else*/ if(strcmp(Verif.GPRMC.statut,"A") == 0)
+  {
+      //Serial.println("Synchronise");
+>>>>>>> fc2b06b5d4a877ff586495d0aaba338f62e85448
       return true;
   }
  
   else if(strcmp(Verif.GPGGA.id,"$GPGGA") == 0)
   {
+<<<<<<< HEAD
     Serial.println("Synchronise");
     return false;
   }
   //else{Serial.println("nooooooooooooooooooooonnnnnnnnnnnnnnnnnnnnnnnnnn presque");}  
+=======
+    //Serial.println("Synchronise");
+    return false;
+  }
+  else
+  {
+    return false;
+  }  
+>>>>>>> fc2b06b5d4a877ff586495d0aaba338f62e85448
 }
 
 void Choix_Msg_NMEA(int c)
