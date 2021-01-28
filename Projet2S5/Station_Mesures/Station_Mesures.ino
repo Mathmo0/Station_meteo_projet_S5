@@ -95,7 +95,7 @@ void setup(void)
 
   //Bsec AffichageBME680;
   
-  //beginBME680();
+  beginBME680();
   //updateValeur();
   //AffichageBME680 = getBME680();
   /*Partie initialisation Timer1 : */
@@ -114,7 +114,7 @@ void setup(void)
 /*--------------------------------------------------------------------------------------------*/
 void loop() 
 {
-  Bsec AffichageBME680;
+  Bsec *  AffichageBME680;
   
   Horloge H;
   Horloge EteHiv;
@@ -143,7 +143,7 @@ void loop()
   if (T_Time_Out_Evenement2 <= 0)
   {
     Serial.println("Dans Evenement 2");
-    //AffichageBME680 = getBME680();
+    AffichageBME680 = getBME680();
       
     T_Time_Out_Evenement2 = T_EVNT2;
     
@@ -180,7 +180,10 @@ void loop()
       }
       
       Serial.print("Fuseau Horaire utilisé : ");Serial.print(FuseauHoraire.ville);Serial.print(", ");Serial.println(FuseauHoraire.pays);
-      //affichage_Valeur_BME680(AffichageBME680);
+
+      //if(synchro == true){
+      affichage_Valeur_BME680(AffichageBME680);//}
+>>>>>>> eddbc86793a0fff435ffafd5dabf5bc3321f7acb
       Serial.println("______________________ Fin Affichage ________________________");
       
   }

@@ -65,38 +65,47 @@ void errLeds(void)
 void beginBME680()
 {
   Wire.begin();
+  
   BME680.begin(BME680_I2C_ADDR_PRIMARY, Wire);
-  //Serial.println("fin_init");
-  //BME680.updateSubscription(sensorList, 10, BSEC_SAMPLE_RATE_LP); 
+  checkIaqSensorStatus(BME680);
+  bsec_virtual_sensor_t sensorList[10] = {
+    BSEC_OUTPUT_RAW_TEMPERATURE,
+    BSEC_OUTPUT_RAW_PRESSURE,
+    BSEC_OUTPUT_RAW_HUMIDITY,
+    BSEC_OUTPUT_RAW_GAS,
+    BSEC_OUTPUT_IAQ,
+    BSEC_OUTPUT_STATIC_IAQ,
+    BSEC_OUTPUT_CO2_EQUIVALENT,
+    BSEC_OUTPUT_BREATH_VOC_EQUIVALENT,
+    BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_TEMPERATURE,
+    BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_HUMIDITY,
+  }; 
+   checkIaqSensorStatus(BME680);
+   
+  BME680.updateSubscription(sensorList, 10, BSEC_SAMPLE_RATE_LP);   
   checkIaqSensorStatus(BME680);
 }
 
-void affichage_Valeur_BME680(Bsec val)
+void affichage_Valeur_BME680(Bsec * val)
 {
-    Serial.println("DébutAffichage");
-    //val.updateSubscription(sensorList, 10, BSEC_SAMPLE_RATE_LP);
-    if (val.run()) // If new data is available
+    if (val->status == BSEC_OK) // If new data is available
     { 
       Serial.println("val.run : ok !!!!");
-      Serial.print("La pression vaut : ");Serial.println(val.pressure);
-      Serial.print("Le taux d'humidité vaut : ");Serial.println(val.humidity);
-      Serial.print("Le l'IAQ vaut : ");Serial.println(val.iaq);
-      Serial.print("L' iaqAccuracy vaut : ");Serial.println(val.iaqAccuracy);
-      Serial.print("La température vaut : ");Serial.println(val.rawTemperature);
-      Serial.print("Le taux de CO2 vaut : ");Serial.println(val.co2Equivalent);
-      Serial.print("Le taux de COV vaut : ");Serial.println(val.breathVocEquivalent);
+      Serial.print("La pression vaut : ");Serial.println(val->pressure);
+      Serial.print("Le taux d'humidité vaut : ");Serial.println(val->humidity);
+      Serial.print("Le l'IAQ vaut : ");Serial.println(val->iaq);
+      Serial.print("L' iaqAccuracy vaut : ");Serial.println(val->iaqAccuracy);
+      Serial.print("La température vaut : ");Serial.println(val->rawTemperature);
+      Serial.print("Le taux de CO2 vaut : ");Serial.println(val->co2Equivalent);
+      Serial.print("Le taux de COV vaut : ");Serial.println(val->breathVocEquivalent);
     } 
     else 
     {
-      Serial.println("VAl.run : is not good fdp");
-      Serial.println("CheckDébut");
-      checkIaqSensorStatus(val);
-      Serial.println("CheckRéussi");
+      Serial.println("val->statut : Erreur ");
     }  
-    Serial.println("FIN_Affichage");
 }
 
-void updateValeur()
+/*void updateValeur()
 {
  
    bsec_virtual_sensor_t sensorList[10] = {
@@ -113,8 +122,12 @@ void updateValeur()
   }; 
    checkIaqSensorStatus(BME680);
   BME680.updateSubscription(sensorList, 10, BSEC_SAMPLE_RATE_LP);   
-}
-Bsec getBME680()
+}*/
+
+Bsec * getBME680()
 {
-  return BME680;
+    if (BME680.run()) // If new data is not available
+    {
+       return &BME680;
+    }
 } 
