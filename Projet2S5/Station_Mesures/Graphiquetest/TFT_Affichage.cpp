@@ -14,11 +14,11 @@ void TFT_setup()
 
   tft.begin(identifier);
   tft.setRotation(0);
-  tft.fillScreen(BLUE);
+  //tft.fillScreen(BLUE);
   Serial.println(F("Benchmark                Time (microseconds)"));
 
   Serial.println(F("Done!"));
-  //tft.fillScreen(WHITE);
+  tft.fillScreen(WHITE);
 }
 
 void TFT_Affichage_Date(Horloge H, Horloge P)
@@ -100,7 +100,7 @@ void TFT_Affiche_ville_ref_fuseau_horaire(pays Pays, pays PaysPres)
     tft.setTextSize(2);
     tft.setCursor(0, 200);
     tft.fillRect(0,200,150,20,BLACK);
-    tft.print(Pays.ville);tft.print(", ");tft.print(Pays.pays);
+    tft.print(Pays.ville);tft.print(",");tft.print(Pays.pays);
   }
 }
 
@@ -110,16 +110,14 @@ void TFT_Affiche_Etat_Synchro(NMEA Verif)
   if(Test_Synchro_GPS(Verif))
   {
     tft.setCursor(0, 250);
-    //tft.fillRect(0,250,150,20,BLACK);
-    tft.fillCircle(30,250,20,GREEN);
-    //tft.print("GPS est synchronise");
+    tft.fillRect(0,250,150,20,BLACK);
+    tft.print("GPS est synchronise");
   }
   else
   {
     tft.setCursor(0, 250);
-    //tft.fillRect(0,250,300,20,BLACK);
-    tft.fillCircle(30,250,20,RED);
-   // tft.print("GPS n'est pas synchronise");
+    tft.fillRect(0,250,300,20,BLACK);
+    tft.print("GPS n'est pas synchronise");
   }
 }
 
@@ -143,4 +141,12 @@ void TFT_Affiche_Valeur_BME680(Bsec * val)
     {
       Serial.println("val->statut : Erreur ");
     }  
+}
+
+void graphiqueMoyennePression()
+{
+   tft.setCursor(0, 0);
+  tft.drawLine(0, 0, 20, 20, RED);
+  //tft.fillRect(90,150,150,20,RED);
+  tft.width();
 }
