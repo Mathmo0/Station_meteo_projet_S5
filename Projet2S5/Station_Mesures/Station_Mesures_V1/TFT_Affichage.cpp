@@ -96,7 +96,7 @@ void TFT_Affiche_ville_ref_fuseau_horaire(pays Pays, pays PaysPres)
     tft.setTextSize(2);
     tft.setCursor(0, 200);
     tft.fillRect(0,200,150,20,BLACK);
-    tft.print(Pays.ville);tft.print(",");tft.print(Pays.pays);
+    tft.print(Pays.ville);tft.print(", ");tft.print(Pays.pays);
   }
 }
 
