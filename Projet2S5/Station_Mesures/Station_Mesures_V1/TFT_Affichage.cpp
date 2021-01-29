@@ -65,15 +65,12 @@ void TFT_Affiche_Heure(Horloge H, Horloge P)
     tft.print(H.H.minute);
     tft.print(":");
     tft.print(H.H.seconde);
-    //tft.println("    ");
-    
-    //delay(1000);
   }
 }
 
 void TFT_Affiche_EteHiv(int EteHiv, int  EteHivPres)
 {
-  if( EteHiv == EteHivPres)
+  if( EteHiv != EteHivPres)
   {
     char * indic;
     if(EteHiv == 1)

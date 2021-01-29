@@ -15,7 +15,7 @@
 
 
 char * HivEte;
-//char * HivEtePres;
+//char * EteHivPres;
 
 void setDateDs1307(Horloge H)
 {
@@ -121,15 +121,15 @@ pays fuseau_horaire_de_ref(int i)
   return FuseauHoraire[i];
 }
 
-char * IndicateurEteHiv(Horloge H)
+int IndicateurEteHiv(Horloge H)
 {
   if(H.D.mois >= 3 && H.D.jour_mois >= 28 && H.H.heure >= 2)
     {
-      HivEte = "ete";
+      HivEte = 1;//ete;
     }
     else
     {
-     HivEte = "hiver";
+      HivEte =0;// hiver;
     }
 
     return HivEte;
@@ -163,7 +163,7 @@ uint8_t jour_semaine(uint8_t jour, uint8_t mois, uint8_t annee)
 int Bissextile(Horloge H)
 {
   int A = H.D.annee + 2000;
-  if(A%4 == 0 && A%100 != 100)
+  if(A%4 == 0 && A%100 != 0)
   {
     return 1;
   }
@@ -179,11 +179,11 @@ int Bissextile(Horloge H)
 
 Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, int E)
 {
-  if(H.D.mois == 3 && H.D.jour_mois == 28 && H.H.heure == 2)
+  if(H.D.mois >= 3 && H.D.jour_mois >= 28 && H.H.heure >= 2)
   {
     E = 1;
   }
-  else if(H.D.mois == 10 && H.D.jour_mois == 31 && H.H.heure == 3)
+  else if(H.D.mois >= 10 && H.D.jour_mois >= 31 && H.H.heure >= 3)
   {
     E = -1;
   }
@@ -197,7 +197,7 @@ Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, int E)
         H.D.jour_mois = 1;
         if(H.D.mois == 12)
         {
-          H.D.mois = 01;
+          H.D.mois = 1;
           ++H.D.annee;
         }
         else
@@ -210,38 +210,23 @@ Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, int E)
         ++H.D.jour_mois;
       }
     }
-    else if(H.D.mois == 02)
+    else if(H.D.mois == 2)
     {
       if(Bissextile(H))
       {
         if(H.D.jour_mois == 29)
         {
           H.D.jour_mois = 1;
-          if(H.D.mois == 12)
-          {
-            H.D.mois = 01;
-            ++H.D.annee;
-          }
-          else
-          {
-            ++H.D.mois;
-          }
+          H.D.mois = 3;
         }
+       
       }
       else
       {
         if(H.D.jour_mois == 28)
         {
           H.D.jour_mois = 1;
-          if(H.D.mois == 12)
-          {
-            H.D.mois = 01;
-            ++H.D.annee;
-          }
-          else
-          {
-            ++H.D.mois;
-          }
+          H.D.mois = 3;
         }
       }
     }
@@ -250,15 +235,7 @@ Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, int E)
       if(H.D.jour_mois == 30)
       {
         H.D.jour_mois = 1;
-        if(H.D.mois == 12)
-        {
-          H.D.mois = 01;
-          ++H.D.annee;
-        }
-        else
-        {
-          ++H.D.mois;
-        }
+        ++H.D.mois;
       }
       else
       {

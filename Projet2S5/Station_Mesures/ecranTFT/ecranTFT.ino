@@ -21,6 +21,9 @@ void setup() {
   Serial.begin(9600);
   //Serial1.begin(9600);
   beginGPS();
+  //Bsec * verif;
+  beginBME680();
+  //updateValeur();
   
   //__________________________________
   
@@ -52,7 +55,11 @@ void loop() {
 
    //delay(1000);
    Horloge Test = getDateDs1307();
-   
+
+   Bsec * verif;
+   verif = getBME680();
+   Test = getDateDs1307();
+      
    pays Pays = fuseau_horaire_de_ref(6);
    
    Test = Correction_Heure_Date(Test, Pays, EteHiv);
