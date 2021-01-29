@@ -15,41 +15,41 @@ Bsec BME680;
 
 void checkIaqSensorStatus(Bsec verif)
 {
-  Serial.println("Début_fonction_Check");
+  //Serial.println("Début_fonction_Check");
   String output;
   if (verif.status != BSEC_OK)
   {
-    Serial.println("entrer1B");
+    //Serial.println("entrer1B");
     if (verif.status < BSEC_OK) {
       output = "BSEC error code : " + String(verif.status);
-      Serial.println(output);
+      //Serial.println(output);
       for (;;)
         errLeds(); /* Halt in case of failure */
     } else {
       output = "BSEC warning code : " + String(verif.status);
-      Serial.println(output);
+      //Serial.println(output);
     }
   }
 
   if (verif.bme680Status != BME680_OK) 
   {
-    Serial.println("entrer2B");
+    //Serial.println("entrer2B");
     if (verif.bme680Status < BME680_OK) 
     {
       output = "BME680 error code : " + String(verif.bme680Status);
-      Serial.println(output);
+      //Serial.println(output);
       for (;;)
         errLeds(); /* Halt in case of failure */
     } 
     
     else
     {
-      Serial.println("entrerElseB");
+      //Serial.println("entrerElseB");
       output = "BME680 warning code : " + String(verif.bme680Status);
-      Serial.println(output);
+      //Serial.println(output);
     }
   }
-  Serial.println("FINNNN_fonction_check");
+  //Serial.println("FINNNN_fonction_check");
 }
 
 void errLeds(void)

@@ -6,7 +6,7 @@
 //extern char * EteHivPres;
 
 //pays PaysPres;
-
+Bsec * verifPres;
 //Horloge EteHiv;
 /*EteHiv.H.heure = 0;
   EteHiv.H.minute = 0;
@@ -54,9 +54,9 @@ void loop() {
    //Test = getDateDs1307();
 
    
-   TFT_Affiche_Valeur_BME680(verif);
+   TFT_Affiche_Valeur_BME680(verif, verifPres);
 
-   
+   //affichage_Valeur_BME680(verif);
    //pays Pays = fuseau_horaire_de_ref(6);
    
    //Test = Correction_Heure_Date(Test, Pays, EteHiv);
@@ -78,6 +78,6 @@ void loop() {
    /*DatePres = Test;
    EteHivPres = EEteHiv2;
    PaysPres = Pays;*/
-   
+   verifPres = verif;
    //delay(1000);
 }

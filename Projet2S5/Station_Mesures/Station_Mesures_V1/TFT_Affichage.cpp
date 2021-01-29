@@ -74,7 +74,7 @@ void TFT_Affiche_Heure(Horloge H, Horloge P)
 
 void TFT_Affiche_EteHiv(int EteHiv, int  EteHivPres)
 {
-  if( EteHiv == EteHivPres)
+  if( EteHiv != EteHivPres)
   {
     char * indic;
     if(EteHiv == 1)
