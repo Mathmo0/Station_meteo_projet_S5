@@ -34,6 +34,10 @@ char * buffer2;
 NMEA msgFromGpsParser;
 int k = 0;
 
+Horloge DatePres;
+int IndicateurEteHIverPres = 5;
+pays FuseauHorairePres;
+
 pays FuseauHoraire = fuseau_horaire_de_ref(0); // Fuseau Horaire de base : Paris
 
 /*varibale poru le Timer1 : */
@@ -99,7 +103,7 @@ void setup(void)
   /*Initialisation ecran TFT : */
     TFT_setup();
     
-    Horloge DatePres;
+    /*Horloge DatePres;
     DatePres.H.seconde = 0;
     DatePres.H.minute = 0;
     DatePres.H.heure = 0;
@@ -110,7 +114,7 @@ void setup(void)
     DatePres.D.jour_semaine = 0;
 
     int IndicateurEteHIverPres = 0;
-    pays FuseauHorairePres;
+    pays FuseauHorairePres;*/
   /*Partie initialisation Timer1 : */
   
   noInterrupts();
@@ -130,11 +134,10 @@ void loop()
   Bsec *  AffichageBME680;
 
   Horloge H;
-  Horloge DatePres;
+  
   int IndicateurEteHIver;
   IndicateurEteHIver = IndicateurEteHiv(H);
-  int IndicateurEteHIverPres = 0;
-  pays FuseauHorairePres;
+  
   
   buffer2 = GetGPS_MSG();
   msgFromGpsParser = GPS_msg_parse(buffer2);  
@@ -205,6 +208,9 @@ void loop()
       Serial.println("______________________ Fin Affichage ________________________");
       
   }
+  FuseauHorairePres = FuseauHoraire;
+  IndicateurEteHIverPres = IndicateurEteHIver;
+  DatePres = H;
   //affichage_Valeur_BME680(rafraichissement);
   //delay(1000);
    

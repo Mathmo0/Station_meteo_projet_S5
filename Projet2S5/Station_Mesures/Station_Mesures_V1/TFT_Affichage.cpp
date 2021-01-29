@@ -60,7 +60,7 @@ void TFT_Affiche_Heure(Horloge H, Horloge P)
     tft.setCursor(0,150);
     //tft.fillScreen(BLACK);
     tft.setTextColor(WHITE);
-    tft.fillRect(0,150,90,20,BLACK);
+    tft.fillRect(0,150,100,20,BLACK);
     tft.print(H.H.heure);
     tft.print(":");
     tft.print(H.H.minute);
@@ -86,8 +86,8 @@ void TFT_Affiche_EteHiv(int EteHiv, int  EteHivPres)
       indic = "hiver"  ;
     }
     tft.setTextSize(2);
-    tft.setCursor(90, 150);
-    tft.fillRect(90,150,150,20,BLACK);
+    tft.setCursor(100, 150);
+    tft.fillRect(100,150,160,20,BLACK);
     tft.print("heure d'");
     tft.print(indic);
   }
