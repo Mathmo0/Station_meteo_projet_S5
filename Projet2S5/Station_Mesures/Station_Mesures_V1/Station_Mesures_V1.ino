@@ -38,12 +38,12 @@ pays FuseauHoraire = fuseau_horaire_de_ref(0); // Fuseau Horaire de base : Paris
 
 /*varibale poru le Timer1 : */
 
-#define BASE_TEMPS_TIMER1_05s 57723U
+//#define BASE_TEMPS_TIMER1_05s 57723U
 #define BASE_TEMPS_TIMER1_1s 49911U
 #define Led2_pin LED_BUILTIN
-#define T_EVNT1 3600*4*2 // Période de gestion de l'événémént 1
-#define T_EVNT2 6 // Période de gestion de l'événémént 2
-#define T_EVNT3 2
+#define T_EVNT1 3600*4 // Période de gestion de l'événémént 1
+#define T_EVNT2 3 // Période de gestion de l'événémént 2
+#define T_EVNT3 1
 volatile int T_Time_Out_Evenement1 = 0;
 volatile int T_Time_Out_Evenement2 = 0;
 volatile int T_Time_Out_Evenement3 =0;
@@ -60,7 +60,7 @@ ISR(TIMER1_OVF_vect)
   T_Time_Out_Evenement3 --;
   
   TIFR1 |= 0B00000001;
-  TCNT1 = BASE_TEMPS_TIMER1_05s;
+  TCNT1 = BASE_TEMPS_TIMER1_1s;
   TIMSK1 = 0B00000001;
   SREG |= 0B10000000;
 }
@@ -119,7 +119,7 @@ void setup(void)
   TCCR1C = 0B00000000;
   TIFR1 |= 0B00000001; // Mise à 1 du bit TOV1
   TIMSK1 |= 0B0000001; // Mise à 1 du bit TOEI1 pour autoriser les IT timer 1
-  TCNT1 = BASE_TEMPS_TIMER1_05s;
+  TCNT1 = BASE_TEMPS_TIMER1_1s;
   interrupts();
   TCCR1B |= 0B00000101; //demarre à 1024
   Serial.println("Initialisation du timer1 : done");
@@ -181,24 +181,24 @@ void loop()
         Serial.println("Non Synchronisé");
       }
       H = getDateDs1307();
-      Affiche_date_heure(H);
+      //Affiche_date_heure(H);
       TFT_Affichage_Date(H,DatePres);
       TFT_Affiche_Heure(H,DatePres);
       TFT_Affiche_Etat_Synchro(msgFromGpsParser);
-      if(IndicateurEteHIver == 0)
+      /*if(IndicateurEteHIver == 0)
       {
         Serial.println("Nous somme en hiver ");
       }
       else
       {
         Serial.println("Nous somme en été ");
-      }
+      }*/
       TFT_Affiche_EteHiv(IndicateurEteHIver,IndicateurEteHIverPres);
-      Serial.print("Fuseau Horaire utilisé : ");Serial.print(FuseauHoraire.ville);Serial.print(", ");Serial.println(FuseauHoraire.pays);
+      //Serial.print("Fuseau Horaire utilisé : ");Serial.print(FuseauHoraire.ville);Serial.print(", ");Serial.println(FuseauHoraire.pays);
       TFT_Affiche_ville_ref_fuseau_horaire(FuseauHoraire,FuseauHorairePres);
       //if(k >= 1)
       //{
-        affichage_Valeur_BME680(AffichageBME680);
+        //affichage_Valeur_BME680(AffichageBME680);
         TFT_Affiche_Valeur_BME680(AffichageBME680);
       //}
       T_Time_Out_Evenement3 = T_EVNT3;
