@@ -18,9 +18,9 @@ void setup() {
   Serial.begin(9600);
   //Serial1.begin(9600);
   beginGPS();
-  Bsec verif;
+  //Bsec * verif;
   beginBME680();
-  updateValeur();
+  //updateValeur();
   
   
   //__________________________________
@@ -53,7 +53,7 @@ void loop() {
    //delay(1000);
    //Horloge Test = getDateDs1307();
 
-   Bsec verif;
+   Bsec * verif;
    verif = getBME680();
    Test = getDateDs1307();
       

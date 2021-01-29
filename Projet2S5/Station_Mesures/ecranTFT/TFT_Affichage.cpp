@@ -20,7 +20,7 @@ void TFT_setup()
   Serial.println(F("Benchmark                Time (microseconds)"));
 
   Serial.println(F("Done!"));
-  //tft.fillScreen(WHITE);
+  tft.fillScreen(WHITE);
 }
 
 void TFT_Affichage_Date(Horloge H, Horloge P)
@@ -114,28 +114,26 @@ void TFT_Affiche_Etat_Synchro(NMEA Verif)
   }
 }
 
-void TFT_Affiche_Valeur_BME680(Bsec val)
+void TFT_Affiche_Valeur_BME680(Bsec * val)
 {
   tft.setCursor(0, 300);
   tft.fillRect(0,300,319,100,BLACK);
   tft.setTextSize(1);
   tft.println("DébutAffichage");
-  if (val.run()) // If new data is available
+  if (val->run()) // If new data is available
     { 
       tft.println("val.run : ok !!!!");
-      tft.print("La pression vaut : ");Serial.println(val.pressure);
-      tft.print("Le taux d'humidité vaut : ");Serial.println(val.humidity);
-      tft.print("Le l'IAQ vaut : ");Serial.println(val.iaq);
-      tft.print("L' iaqAccuracy vaut : ");Serial.println(val.iaqAccuracy);
-      tft.print("La température vaut : ");Serial.println(val.rawTemperature);
-      tft.print("Le taux de CO2 vaut : ");Serial.println(val.co2Equivalent);
-      tft.print("Le taux de COV vaut : ");Serial.println(val.breathVocEquivalent);
+      tft.print("La pression vaut : ");tft.println(val->pressure);
+      tft.print("Le taux d'humidité vaut : ");tft.println(val->humidity);
+      tft.print("Le l'IAQ vaut : ");tft.println(val->iaq);
+      tft.print("L' iaqAccuracy vaut : ");tft.println(val->iaqAccuracy);
+      tft.print("La température vaut : ");tft.println(val->rawTemperature);
+      tft.print("Le taux de CO2 vaut : ");tft.println(val->co2Equivalent);
+      tft.print("Le taux de COV vaut : ");tft.println(val->breathVocEquivalent);
     } 
     else 
     {
-      tft.println("VAl.run : is not good fdp");
-      tft.println("CheckDébut");
-      checkIaqSensorStatus(val);
-      tft.println("CheckRéussi");
+      //checkIaqSensorStatus(val);
+      tft.println("val->statut : Erreur ");
     }
 }
