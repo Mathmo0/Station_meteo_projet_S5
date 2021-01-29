@@ -26,6 +26,7 @@
 #include "GPS.h"
 #include "BME680_Sensor.h"
 #include "Calendrier.h"
+#include "TFT_Affichage.h"
 
 // Variables globales
 
@@ -92,13 +93,24 @@ void setup(void)
   //NMEA msgFromGpsParser;
 
   /*Initialisation du capteurBME680 : */
-  //Wire.begin();
 
-  //Bsec AffichageBME680;
-  
   beginBME680();
-  //updateValeur();
-  //AffichageBME680 = getBME680();
+  
+  /*Initialisation ecran TFT : */
+    TFT_setup();
+    
+    Horloge DatePres;
+    DatePres.H.seconde = 0;
+    DatePres.H.minute = 0;
+    DatePres.H.heure = 0;
+  
+    DatePres.D.jour_mois = 0;
+    DatePres.D.mois =  0;
+    DatePres.D.annee = 0;
+    DatePres.D.jour_semaine = 0;
+
+    int IndicateurEteHIverPres = 0;
+    pays FuseauHorairePres;
   /*Partie initialisation Timer1 : */
   
   noInterrupts();
@@ -116,11 +128,13 @@ void setup(void)
 void loop() 
 {
   Bsec *  AffichageBME680;
-  
+
   Horloge H;
-  Horloge EteHiv;
+  Horloge DatePres;
   int IndicateurEteHIver;
   IndicateurEteHIver = IndicateurEteHiv(H);
+  int IndicateurEteHIverPres = 0;
+  pays FuseauHorairePres;
   
   buffer2 = GetGPS_MSG();
   msgFromGpsParser = GPS_msg_parse(buffer2);  
@@ -151,6 +165,7 @@ void loop()
   {
        if (synchro == true)
       {
+        
         Serial.println("Synchronisé");
         if(k  <1)
         {
@@ -167,6 +182,9 @@ void loop()
       }
       H = getDateDs1307();
       Affiche_date_heure(H);
+      TFT_Affichage_Date(H,DatePres);
+      TFT_Affiche_Heure(H,DatePres);
+      TFT_Affiche_Etat_Synchro(msgFromGpsParser);
       if(IndicateurEteHIver == 0)
       {
         Serial.println("Nous somme en hiver ");
@@ -175,12 +193,13 @@ void loop()
       {
         Serial.println("Nous somme en été ");
       }
-      
+      TFT_Affiche_EteHiv(IndicateurEteHIver,IndicateurEteHIverPres);
       Serial.print("Fuseau Horaire utilisé : ");Serial.print(FuseauHoraire.ville);Serial.print(", ");Serial.println(FuseauHoraire.pays);
-
+      TFT_Affiche_ville_ref_fuseau_horaire(FuseauHoraire,FuseauHorairePres);
       if(k >= 1)
       {
         affichage_Valeur_BME680(AffichageBME680);
+        TFT_Affiche_Valeur_BME680(AffichageBME680);
       }
       T_Time_Out_Evenement3 = T_EVNT3;
       Serial.println("______________________ Fin Affichage ________________________");
