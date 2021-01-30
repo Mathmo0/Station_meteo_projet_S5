@@ -43,7 +43,7 @@ char * GetGPS_MSG()
       while(Serial1.available())
       {  
          buffer[count] = Serial1.read();
-         Serial.print(buffer[count]);
+         //Serial.print(buffer[count]);
          if(buffer[count] == '\n' && buffer[count-1] == '\r' )
          {
               Serial.println("Sortie en cours fdp : ");
@@ -300,12 +300,12 @@ bool testUnitaireBuffer(char * buffer)
       return false; 
    }
    
-   return true
+   return true;
 }
 
-testUnitaireParse(NMEA verif)
+bool testUnitaireParse(NMEA verif)
 {
-   if(strcmp(verif.GPRMC.id,"$GPRMC") == 0)
+  /* if(strcmp(verif.GPRMC.id,"$GPRMC") == 0)
     {
        if(strcmp(verif.GPRMC.UTCtime,'\0') == 0)
        {
@@ -381,9 +381,6 @@ testUnitaireParse(NMEA verif)
       parsermsg = strtok (NULL, ","); // MSL Altitude
       stokageMsg.GPGGA.mslAltitude = parsermsg;
       
-      /*Serial.print(" stokageMsg.GPGGA.id = ");Serial.println(stokageMsg.GPGGA.id);
-      Serial.print(" stokageMsg.GPGGA.positionIndicator = ");Serial.println(stokageMsg.GPGGA.positionIndicator);
-      Serial.print(" stokageMsg.GPGGA.mslAltitude = ");Serial.println(stokageMsg.GPGGA.mslAltitude);*/
 
       return stokageMsg;
       
@@ -397,5 +394,5 @@ testUnitaireParse(NMEA verif)
     {
         return false;  
     }
-     return true;
+     return true;*/
 }

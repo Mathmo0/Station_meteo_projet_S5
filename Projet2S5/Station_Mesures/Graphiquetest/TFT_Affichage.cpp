@@ -8,7 +8,7 @@
 
 float SommePression = 0; 
 int nbValeur = 0;
-float StockageMoyennePression[28] = {900,1000,980,990,1050,987,3456,10987,5555,12654,999,7658,3333,6789,6543,1234,13765,7890,3456,6310,9876,4567,2345,9987,8876,7765,6654,900};
+float StockageMoyennePression[28] = {970,1000,980,990,1050,987,3456,10987,5555,12654,999,7658,3333,6789,6543,1234,13765,7890,3456,6310,9876,4567,2345,9987,8876,7765,6654,900};
 uint8_t heurePres  = 25;
 int i = 27;
 
@@ -185,32 +185,32 @@ void graphiqueMoyennePression()
    for ( nbBarre = 0; nbBarre<=i; nbBarre++)
    {
       int hauteurBarre = roundf(StockageMoyennePression[nbBarre]) ;
-      Serial.print("StockageMoyennePression[nbBarre]");Serial.println(StockageMoyennePression[nbBarre]);
-      Serial.print("PMIN = ");Serial.println(PMIN);
-      Serial.print("PMAX = ");Serial.println(PMAX);
+      //Serial.print("StockageMoyennePression[nbBarre]");Serial.println(StockageMoyennePression[nbBarre]);
+      //Serial.print("PMIN = ");Serial.println(PMIN);
+      //Serial.print("PMAX = ");Serial.println(PMAX);
       if ( hauteurBarre >= PMAX)
       {
-          Serial.println("ENtrer dans la boucle >=PMAX");
+          //Serial.println("ENtrer dans la boucle >=PMAX");
           hauteurBarre = (PMAX-PMIN);//*epaisseur_barre;
       }
 
       else if (hauteurBarre <= PMIN)
       {
-          Serial.println("ENtrer dans la boucle <=PMIN");
+          //Serial.println("ENtrer dans la boucle <=PMIN");
           hauteurBarre = 0 ;//(PMIN-PMIN)*epaisseur_barre
       }
 
       else
       {
-           Serial.println("ENtrer dans la boucle normal");
+           //Serial.println("ENtrer dans la boucle normal");
            hauteurBarre = (StockageMoyennePression[nbBarre]-PMIN);//*epaisseur_barre ;
       }
 
-      Serial.print("hauteur barre = ");Serial.println(hauteurBarre);
+      
+
+      //Serial.print("hauteur barre = ");Serial.println(hauteurBarre);
       tft.fillRect(absicsse[2]-(distanceentreBarre*nbBarre*2),absicsse[1]-hauteurBarre, epaisseur_barre,hauteurBarre,GREEN);
    }
-  //tft.fillRect(90,150,150,20,RED);
-  //tft.width();
 }
 
 void MoyennePression(Horloge H)
@@ -218,34 +218,42 @@ void MoyennePression(Horloge H)
   if( H.H.heure == heurePres)
   {
       StockageMoyennePression[i] = (SommePression/nbValeur)/100; // pour avoir en hPa
-      Serial.println(i);Serial.print(" : VAleur SommePression[i] = ");Serial.println(StockageMoyennePression[i]);
+      Serial.print(i);Serial.print(" : VAleur SommePression[i] = ");Serial.println(StockageMoyennePression[i]);
       Serial.print(" : VAleur SommePression[0] = ");Serial.println(StockageMoyennePression[0]);
+      Serial.print(i);Serial.print(" : VAleur SommePression[26] = ");Serial.println(StockageMoyennePression[26]);
+      Serial.print(i);Serial.print(" : VAleur SommePression[27] = ");Serial.println(StockageMoyennePression[27]);
+      Serial.print(i);Serial.print(" : VAleur SommePression[28] = ");Serial.println(StockageMoyennePression[28]);
   }
   else
   {
+    Serial.println("Avant____________");
+    Serial.print("VAleur SommePression = ");Serial.println(SommePression);
+    Serial.print("VAleur nbValeur = ");Serial.println(nbValeur);
+    Serial.print(i);Serial.print(" : VAleur SommePression[26] = ");Serial.println(StockageMoyennePression[26]);
+    Serial.print(i);Serial.print(" : VAleur SommePression[27] = ");Serial.println(StockageMoyennePression[27]);
     
     i++;
     SommePression = 0; 
     heurePres = H.H.heure;
     nbValeur = 0;
-    if(i>28)
+    if(i>=28)
     {
-      /*reset du tableau en conserveau la dernière valeur qui deviendra la première valeur du tableau*/
-      float tmp = StockageMoyennePression[27];
-      int j = 0;
-      while(j<28)
+      /*on supprime la première valeur du tableau(la plus ancienne) en décalent tout de 1 et permet de libèrer la dernière case*/
+      
+      for(int j = 0; j<i-1;j++)
       {
-          Serial.print("tmp = ");Serial.println(tmp);
-          Serial.println("reset en cours");
-          StockageMoyennePression[j] = 0;
-          j++;
+          StockageMoyennePression[j] = StockageMoyennePression[j+1];
       }
-      StockageMoyennePression[0] = tmp;
-      i=1;
+      i--;
+      Serial.println("Après____________");
+      Serial.print("VAleur SommePression = ");Serial.println(SommePression);
+      Serial.print("VAleur nbValeur = ");Serial.println(nbValeur);
+      Serial.print(i);Serial.print(" : VAleur SommePression[26] = ");Serial.println(StockageMoyennePression[26]);
+      Serial.print(i);Serial.print(" : VAleur SommePression[27] = ");Serial.println(StockageMoyennePression[27]);
+      
     }
   }
-  Serial.print("VAleur SommePression = ");Serial.println(SommePression);
-  Serial.print("VAleur nbValeur = ");Serial.println(nbValeur);  
+    
 }
 
 float GetDeltaPresssion()
