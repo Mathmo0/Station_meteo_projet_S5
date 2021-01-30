@@ -1,7 +1,8 @@
 // Fichier TFT_Affichage.cpp
 // Routines de gestion d'affichage sur écran TFT Adafruit 2050
 
-
+#include <stdlib.h>
+#include <stdio.h>
 #include "TFT_Affichage.h"
 
 Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
@@ -10,17 +11,17 @@ void TFT_setup()
 {
   Serial.begin(9600);  
   tft.reset();
-  tft.fillScreen(WHITE);
+  //tft.fillScreen(WHITE);
   
 
   uint16_t identifier = tft.readID();
 
   tft.begin(identifier);
-
+tft.fillScreen(BLACK);
   Serial.println(F("Benchmark                Time (microseconds)"));
 
   Serial.println(F("Done!"));
-  tft.fillScreen(WHITE);
+  
 }
 
 void TFT_Affichage_Date(Horloge H, Horloge P)
@@ -59,6 +60,7 @@ void TFT_Affiche_Heure(Horloge H, Horloge P)
   if(H.H.seconde != P.H.seconde)
   {
     tft.setTextSize(2);
+    //tft.setTextColor(WHITE);
     tft.setCursor(0,150);
     //tft.fillScreen(BLACK);
     tft.setTextColor(WHITE);
@@ -114,22 +116,67 @@ void TFT_Affiche_Etat_Synchro(NMEA Verif)
   }
 }
 
-void TFT_Affiche_Valeur_BME680(Bsec * val)
+void remplacer_valeur(char * V, char * VP)
 {
-  tft.setCursor(0, 300);
-  tft.fillRect(0,300,319,100,BLACK);
+  int len = max(strlen(V), strlen(VP));
+  int i = 0;
+  Serial.println(V);
+  Serial.println(VP);
+  while(i <= len && V[i] == VP[i])
+  {
+    ++i;
+  }
+  tft.setCursor(i*6, 0);
+  tft.fillRect(i*6,0,150,7,BLACK);
+  for(i; i<strlen(V); ++i)
+  {
+    tft.print(V[i]);
+  }
+}
+
+void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec * valPres)
+{
+  tft.setCursor(0, 0);
+  //tft.fillRect(0,250,229,150,BLACK);
   tft.setTextSize(1);
+  tft.setTextColor(WHITE);
   tft.println("DébutAffichage");
-  if (val->run()) // If new data is available
+  if ( val->status == BSEC_OK) // If new data is available
     { 
-      tft.println("val.run : ok !!!!");
-      tft.print("La pression vaut : ");tft.println(val->pressure);
-      tft.print("Le taux d'humidité vaut : ");tft.println(val->humidity);
-      tft.print("Le l'IAQ vaut : ");tft.println(val->iaq);
-      tft.print("L' iaqAccuracy vaut : ");tft.println(val->iaqAccuracy);
-      tft.print("La température vaut : ");tft.println(val->rawTemperature);
-      tft.print("Le taux de CO2 vaut : ");tft.println(val->co2Equivalent);
-      tft.print("Le taux de COV vaut : ");tft.println(val->breathVocEquivalent);
+      
+      //----------------------------//
+      char pres[10]; 
+      sprintf(pres, "%d", val->pressure);
+      //(char *)(val->pressure);
+      /*char * humid = (char *)(val->humidity);
+      char * aqi = (char *)(val->iaq);
+      char * temp = (char *)(val->rawTemperature);
+      char * co2 = (char *)(val->co2Equivalent);
+      char * voc = (char *)(val->breathVocEquivalent);*/
+
+      char presP[10]; 
+      sprintf(presP, "%d", valPres->pressure);
+      //Serial.print(pres);
+      //presP = (char *)(valPres->pressure);
+      /*char * humidP = (char *)(valPres->humidity);
+      char * aqiP = (char *)(valPres->iaq);
+      char * tempP = (char *)(valPres->rawTemperature);
+      char * co2P = (char *)(valPres->co2Equivalent);
+      char * vocP = (char *)(valPres->breathVocEquivalent);*/
+      //----------------------------//
+      
+      //tft.println("val.run : ok !!!!");
+      if(val->pressure != valPres->pressure)
+      {
+        tft.print("La pression vaut : "); remplacer_valeur(pres, presP); //tft.println(val->pressure);
+      }
+      
+      /*tft.print("Le taux d'humidité vaut : "); //tft.println(val->humidity);
+      tft.print("Le l'IAQ vaut : "); //tft.println(val->iaq);
+      tft.print("L' iaqAccuracy vaut : "); //tft.println(val->iaqAccuracy);
+      tft.print("La température vaut : "); //tft.println(val->rawTemperature);
+      tft.print("Le taux de CO2 vaut : "); //tft.println(val->co2Equivalent);
+      tft.print("Le taux de COV vaut : "); //tft.println(val->breathVocEquivalent);*/
     } 
     else 
     {
