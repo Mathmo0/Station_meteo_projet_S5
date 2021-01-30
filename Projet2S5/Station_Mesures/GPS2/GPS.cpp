@@ -272,3 +272,130 @@ Horloge Extract_date_heure_from_GPS(char Date[6], char Heure[6])
     //Serial.print("H.D.jour-semaine =  ");Serial.println(H.D.jour_semaine);
     return H;
 }
+/*  Partie des Test Unitai re */
+bool testUnitaireBuffer(char * buffer)
+{
+   int compteur = 0;
+   int nbDollar = 0;
+   int nbEtoile =0;
+   while(buffer[compteur] != '\0')
+   {
+       /*On compte le nombre de dollar et d'étoile dans le message qui sont normalement égale à 1 : */
+       
+       if (buffer[compteur] == '$')
+       {
+           nbDollar++;
+       }
+
+       if(buffer[compteur] == '*')
+       {
+           nbEtoile++;
+       }
+   }
+
+   /*Si on n'a pas (ou plus de 1) d'étoile et dollar dans le buffer il y a une erreur */
+   
+   if(nbEtoile != 1 || nbDollar != 1)
+   {
+      return false; 
+   }
+   
+   return true
+}
+
+testUnitaireParse(NMEA verif)
+{
+   if(strcmp(verif.GPRMC.id,"$GPRMC") == 0)
+    {
+       if(strcmp(verif.GPRMC.UTCtime,'\0') == 0)
+       {
+          return false; 
+       }
+       
+       if(strcmp(verif.GPRMC.statut,'\0') == 0)
+       {
+          return false; 
+       }
+       
+       if(strcmp(verif.GPRMC.id,"$GPRMC") == 0)
+       {
+          return false; 
+       }          
+       
+       if(strcmp(verif.GPRMC.id,"$GPRMC") == 0)
+       {
+          return false; 
+       }
+       
+       if(strcmp(verif.GPRMC.id,"$GPRMC") == 0)
+       {
+          return false; 
+       }
+       
+       if(strcmp(verif.GPRMC.id,"$GPRMC") == 0)
+       {
+          return false; 
+       }
+       
+       if(strcmp(verif.GPRMC.id,"$GPRMC") == 0)
+       {
+          return false; 
+       }
+       
+       if(strcmp(verif.GPRMC.id,"$GPRMC") == 0)
+       {
+          return false; 
+       }
+      stokageMsg.GPRMC.UTCtime = parsermsg;
+   
+      stokageMsg.GPRMC.statut = parsermsg;
+      
+      stokageMsg.GPRMC.latitude = parsermsg;
+    
+      stokageMsg.GPRMC.indicateurLatitute = parsermsg;
+      parsermsg = strtok (NULL, ",");//longitude 
+      stokageMsg.GPRMC.longitude = parsermsg;
+      parsermsg = strtok (NULL, ","); //indicateur longitude
+      stokageMsg.GPRMC.indicateurLongitude = parsermsg;
+      parsermsg = strtok (NULL, ","); //speed gound
+      parsermsg = strtok (NULL, ","); // course ground 
+      parsermsg = strtok (NULL, ","); // date
+      stokageMsg.GPRMC.date = parsermsg;
+      parsermsg = strtok (NULL, ", *");//mode (magnetic variation et Est/West indicator sont sauté car on a aucune valeur)
+      stokageMsg.GPRMC.mode = parsermsg;
+
+      return stokageMsg;
+    }
+    else if(strcmp(parsermsg,"$GPGGA") == 0)
+    {
+      stokageMsg.GPGGA.id = parsermsg;
+      parsermsg = strtok (NULL, ","); //UTC
+      parsermsg = strtok (NULL, ","); // Latitude 
+      parsermsg = strtok (NULL, ","); // Indic Latitude
+      parsermsg = strtok (NULL, ","); //Longitude
+      parsermsg = strtok (NULL, ","); // Indic longitude 
+      parsermsg = strtok (NULL, ","); // position dicator 
+      stokageMsg.GPGGA.positionIndicator = parsermsg;
+      parsermsg = strtok (NULL, ","); // satellites used 
+      parsermsg = strtok (NULL, ","); //HDOP
+      parsermsg = strtok (NULL, ","); // MSL Altitude
+      stokageMsg.GPGGA.mslAltitude = parsermsg;
+      
+      /*Serial.print(" stokageMsg.GPGGA.id = ");Serial.println(stokageMsg.GPGGA.id);
+      Serial.print(" stokageMsg.GPGGA.positionIndicator = ");Serial.println(stokageMsg.GPGGA.positionIndicator);
+      Serial.print(" stokageMsg.GPGGA.mslAltitude = ");Serial.println(stokageMsg.GPGGA.mslAltitude);*/
+
+      return stokageMsg;
+      
+    }
+    else if(strcmp(parsermsg,"$PMTK001") == 0)
+    {
+          
+    }
+
+    else
+    {
+        return false;  
+    }
+     return true;
+}

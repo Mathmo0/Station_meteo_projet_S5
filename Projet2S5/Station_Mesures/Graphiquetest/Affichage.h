@@ -8,9 +8,6 @@
 #include "BME680_Sensor.h"
 #include "Calendrier.h"
 #include "TFT_Affichage.h"
-
 // Définition de constantes symboliques
 
 // Fonctions prototypes pour terminal série
-
-void graphiqueMoyennePression();

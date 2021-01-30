@@ -7,7 +7,7 @@ int k =0;
 
 void setup() {
   // put your setup code here, to run once:
-  Bsec verif;
+  Bsec * verif;
   Serial.begin(9600);
   Serial.println("TestSD");
   

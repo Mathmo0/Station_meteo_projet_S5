@@ -9,7 +9,6 @@
 
 #include <Arduino.h>
 
-
 // Définition de type de données pour gestion de la date
 
 typedef struct Heure
