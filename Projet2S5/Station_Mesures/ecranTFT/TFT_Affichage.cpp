@@ -126,8 +126,8 @@ void remplacer_valeur(char * V, char * VP)
   {
     ++i;
   }
-  tft.setCursor(i*6, 0);
-  tft.fillRect(i*6,0,150,7,BLACK);
+  tft.setCursor(i*6 + 150, 7);
+  tft.fillRect(i*6 + 150,7,150,7,BLACK);
   for(i; i<strlen(V); ++i)
   {
     tft.print(V[i]);
@@ -146,7 +146,8 @@ void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec * valPres)
       
       //----------------------------//
       char pres[10]; 
-      sprintf(pres, "%d", val->pressure);
+      //sprintf(pres, "%d", val->pressure);
+      sprintf(pres, "%d", val->rawTemperature);
       //(char *)(val->pressure);
       /*char * humid = (char *)(val->humidity);
       char * aqi = (char *)(val->iaq);
@@ -155,7 +156,8 @@ void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec * valPres)
       char * voc = (char *)(val->breathVocEquivalent);*/
 
       char presP[10]; 
-      sprintf(presP, "%d", valPres->pressure);
+      //sprintf(presP, "%d", valPres->pressure);
+      sprintf(presP, "%d", valPres->rawTemperature);
       //Serial.print(pres);
       //presP = (char *)(valPres->pressure);
       /*char * humidP = (char *)(valPres->humidity);
@@ -163,12 +165,13 @@ void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec * valPres)
       char * tempP = (char *)(valPres->rawTemperature);
       char * co2P = (char *)(valPres->co2Equivalent);
       char * vocP = (char *)(valPres->breathVocEquivalent);*/
-      //----------------------------//
+      //----------------------------//*
       
       //tft.println("val.run : ok !!!!");
-      if(val->pressure != valPres->pressure)
+      if(val->rawTemperature != valPres->rawTemperature)
       {
-        tft.print("La pression vaut : "); remplacer_valeur(pres, presP); //tft.println(val->pressure);
+        //tft.print("La pression vaut : "); remplacer_valeur(pres, presP); //tft.println(val->pressure);
+        tft.print("la temperature vaut : "); remplacer_valeur(pres, presP); //tft.println(val->pressure);
       }
       
       /*tft.print("Le taux d'humidité vaut : "); //tft.println(val->humidity);
