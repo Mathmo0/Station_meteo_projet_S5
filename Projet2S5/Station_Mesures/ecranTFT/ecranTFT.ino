@@ -78,6 +78,13 @@ void loop() {
    /*DatePres = Test;
    EteHivPres = EEteHiv2;
    PaysPres = Pays;*/
-   verifPres = verif;
+   //verifPres-> = verif->;
+   verifPres->pressure = verif->pressure;
+   verifPres->humidity = verif->humidity;
+   verifPres->iaq = verif->iaq;
+   verifPres->iaqAccuracy = verif->iaqAccuracy;
+   verifPres->rawTemperature = verif->rawTemperature;
+   verifPres->co2Equivalent = verif->co2Equivalent;
+   verifPres->breathVocEquivalent = verif->breathVocEquivalent;
    //delay(1000);
 }
