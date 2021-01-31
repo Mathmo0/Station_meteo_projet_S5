@@ -17,7 +17,7 @@ void TFT_setup()
   uint16_t identifier = tft.readID();
 
   tft.begin(identifier);
-tft.fillScreen(BLACK);
+tft.fillScreen(WHITE);
   Serial.println(F("Benchmark                Time (microseconds)"));
 
   Serial.println(F("Done!"));
@@ -116,76 +116,141 @@ void TFT_Affiche_Etat_Synchro(NMEA Verif)
   }
 }
 
-void remplacer_valeur(char * V, char * VP)
+void remplacer_valeur(char * V, char * VP, int x, int y)
 {
   int len = max(strlen(V), strlen(VP));
   int i = 0;
   Serial.println(V);
   Serial.println(VP);
-  while(i <= len && V[i] == VP[i])
+  while(V[i] == VP[i] && i <= len)
   {
     ++i;
   }
-  tft.setCursor(i*6 + 150, 7);
-  tft.fillRect(i*6 + 150,7,150,7,BLACK);
-  for(i; i<strlen(V); ++i)
+  
+  tft.setCursor(x + i*6, y);
+  tft.fillRect(x + i*6, y, 50,7*2,BLACK);
+  for(i; i<=strlen(V); ++i)
   {
     tft.print(V[i]);
   }
+  //tft.setCursor(x + i*6 + 130, y);
 }
 
 void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec * valPres)
 {
-  tft.setCursor(0, 0);
-  //tft.fillRect(0,250,229,150,BLACK);
-  tft.setTextSize(1);
-  tft.setTextColor(WHITE);
-  tft.println("DébutAffichage");
-  if ( val->status == BSEC_OK) // If new data is available
+  //tft.setCursor(0, 0);
+  
+  
+  tft.setTextSize(2);
+  //tft.println("DébutAffichage");
+ if (val->status == BSEC_OK) // If new data is available
     { 
-      
-      //----------------------------//
-      char pres[10]; 
-      //sprintf(pres, "%d", val->pressure);
-      dtostrf(val->rawTemperature, 10, 2, pres);
-      //sprintf(pres, "%d", val->rawTemperature);
-      //(char *)(val->pressure);
-      /*char * humid = (char *)(val->humidity);
-      char * aqi = (char *)(val->iaq);
-      char * temp = (char *)(val->rawTemperature);
-      char * co2 = (char *)(val->co2Equivalent);
-      char * voc = (char *)(val->breathVocEquivalent);*/
+      char presT[10];
+      dtostrf(val->rawTemperature, 10, 1, presT);
+      char presPT[10];
+      dtostrf(valPres->rawTemperature, 10, 1, presPT);
+      //if(val->rawTemperature != valPres->rawTemperature)
+      //{
+        tft.setCursor(30, 155);
+        //tft.print("Temperature :"); 
+        remplacer_valeur(presT, presPT, 80, 155); 
+        //tft.print("  C");//tft.println(val->pressure);
+      //}
+      free(presT);
+      free(presPT);
 
-      char presP[10]; 
-      //sprintf(presP, "%d", valPres->pressure);
-      //sprintf(presP, "%d", valPres->rawTemperature);
-      dtostrf(valPres->rawTemperature, 10, 2, presP);
-      //Serial.print(pres);
-      //presP = (char *)(valPres->pressure);
-      /*char * humidP = (char *)(valPres->humidity);
-      char * aqiP = (char *)(valPres->iaq);
-      char * tempP = (char *)(valPres->rawTemperature);
-      char * co2P = (char *)(valPres->co2Equivalent);
-      char * vocP = (char *)(valPres->breathVocEquivalent);*/
-      //----------------------------//*
-      
-      //tft.println("val.run : ok !!!!");
-      if(val->rawTemperature != valPres->rawTemperature)
+      char presH[10];
+      dtostrf(val->pressure, 10, 1, presH);
+      char presPH[10];
+      dtostrf(valPres->pressure, 10, 1, presPH);
+      //if(val->pressure != valPres->pressure)
+      //{
+        tft.setCursor(30, 185);
+        //tft.print("Pression :"); 
+        remplacer_valeur(presH, presPH, 20, 185); 
+        //tft.print(" hPa");//tft.println(val->pressure);
+      //}
+      free(presH);
+      free(presPH);
+
+      char presHu[10];
+      dtostrf(val->humidity, 10, 1, presHu);
+      char presPHu[10];
+      dtostrf(valPres->humidity, 10, 1, presPHu);
+      //if(val->humidity != valPres->humidity)
+      //{
+        tft.setCursor(30, 215);
+        //tft.print("Humidite :"); 
+        remplacer_valeur(presHu, presPHu, 20, 215); 
+        //tft.print(" %");//tft.println(val->pressure);
+      //}
+      free(presHu);
+      free(presPHu);
+
+      char presE[10];
+      dtostrf(val->co2Equivalent, 10, 1, presE);
+      char presPE[10];
+      dtostrf(valPres->co2Equivalent, 10, 1, presPE);
+      //if(val->co2Equivalent != valPres->co2Equivalent)
+      //{
+        tft.setCursor(30, 240);
+        //tft.print("Taux de CO2 :"); 
+        remplacer_valeur(presE, presPE, 30, 240); 
+        //tft.print(" ppm");//tft.println(val->pressure);
+      //}
+      free(presE);
+      free(presPE);
+
+      /*char presB[10];
+      dtostrf(val->breathVocEquivalent, 10, 1, presB);
+      char presPB[10];
+      dtostrf(valPres->breathVocEquivalent, 10, 1, presPB);
+      if(val->breathVocEquivalent != valPres->breathVocEquivalent)
       {
-        //tft.print("La pression vaut : "); remplacer_valeur(pres, presP); //tft.println(val->pressure);
-        tft.print("la temperature vaut : "); remplacer_valeur(pres, presP); //tft.println(val->pressure);
+        tft.setCursor(30, 260);
+        //tft.print("Taux de COV :"); 
+        remplacer_valeur(presB, presPB, 70, 260); 
+        //tft.print(" ppm");//tft.println(val->pressure);
       }
-      
-      /*tft.print("Le taux d'humidité vaut : "); //tft.println(val->humidity);
-      tft.print("Le l'IAQ vaut : "); //tft.println(val->iaq);
-      tft.print("L' iaqAccuracy vaut : "); //tft.println(val->iaqAccuracy);
-      tft.print("La température vaut : "); //tft.println(val->rawTemperature);
-      tft.print("Le taux de CO2 vaut : "); //tft.println(val->co2Equivalent);
-      tft.print("Le taux de COV vaut : "); //tft.println(val->breathVocEquivalent);*/
+
+      char presA[10];
+      dtostrf(val->iaq, 10, 1, presA);
+      char presPA[10];
+      dtostrf(valPres->iaq, 10, 1, presPA);
+      if(val->iaq != valPres->iaq)
+      {
+        tft.setCursor(30, 305);
+        //tft.print("iAQ :"); 
+        remplacer_valeur(presA, presPA, 30, 305);//tft.println(val->pressure);
+      }
+
+      char presAc[10];
+      dtostrf(val->iaqAccuracy, 10, 1, presAc);
+      char presPAc[10];
+      dtostrf(valPres->iaqAccuracy, 10, 1, presPAc);
+      if(val->iaqAccuracy != valPres->iaqAccuracy)
+      {
+        tft.setCursor(30, 320);
+        //tft.print("iAQAcc :"); 
+        remplacer_valeur(presAc, presPAc, 30, 320);//tft.println(val->pressure);
+      }*/
+      /*tft.print("La pression vaut : ");tft.println(val->pressure);
+      tft.print("Le taux d'humidité vaut : ");tft.println(val->humidity);
+      tft.print("Le l'IAQ vaut : ");tft.println(val->iaq);
+      tft.print("L' iaqAccuracy vaut : ");tft.println(val->iaqAccuracy);
+      tft.print("La température vaut : ");tft.println(val->rawTemperature);
+      tft.print("Le taux de CO2 vaut : ");tft.println(val->co2Equivalent);
+      tft.print("Le taux de COV vaut : ");tft.println(val->breathVocEquivalent);*/
+      /*Serial.print("La pression vaut : ");Serial.println(val->pressure);
+      Serial.print("Le taux d'humidité vaut : ");Serial.println(val->humidity);
+      Serial.print("Le l'IAQ vaut : ");Serial.println(val->iaq);
+      Serial.print("L' iaqAccuracy vaut : ");Serial.println(val->iaqAccuracy);
+      Serial.print("La température vaut : ");Serial.println(val->rawTemperature);
+      Serial.print("Le taux de CO2 vaut : ");Serial.println(val->co2Equivalent);
+      Serial.print("Le taux de COV vaut : ");Serial.println(val->breathVocEquivalent);*/
     } 
     else 
     {
-      //checkIaqSensorStatus(val);
-      tft.println("val->statut : Erreur ");
-    }
+      Serial.println("val->statut : Erreur ");
+    }  
 }

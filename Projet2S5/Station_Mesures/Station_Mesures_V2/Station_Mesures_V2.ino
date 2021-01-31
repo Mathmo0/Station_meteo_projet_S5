@@ -34,9 +34,13 @@ char * buffer2;
 NMEA msgFromGpsParser;
 int k = 0;
 
+extern float SommePression;
+extern int nbValeur;
+
 Horloge DatePres;
 int IndicateurEteHIverPres = 5;
 pays FuseauHorairePres;
+Bsec * AffichageBME680Pres;
 
 pays FuseauHoraire = fuseau_horaire_de_ref(0); // Fuseau Horaire de base : Paris
 
@@ -202,7 +206,7 @@ void loop()
       //if(k >= 1)
       //{
         //affichage_Valeur_BME680(AffichageBME680);
-        TFT_Affiche_Valeur_BME680(AffichageBME680);
+        //TFT_Affiche_Valeur_BME680(AffichageBME680);
       //}
       T_Time_Out_Evenement3 = T_EVNT3;
       Serial.println("______________________ Fin Affichage ________________________");
@@ -211,7 +215,18 @@ void loop()
   FuseauHorairePres = FuseauHoraire;
   IndicateurEteHIverPres = IndicateurEteHIver;
   DatePres = H;
+
+  float recupDelta = 678;
+  SommePression = SommePression+AffichageBME680->pressure;
+  nbValeur++;
+  //affichage_Valeur_BME680(verif);
+  graphiqueMoyennePression();
+  MoyennePression(H);
+  recupDelta = GetDeltaPresssion();
+  Serial.print("Delta = ");Serial.println(recupDelta);
   //affichage_Valeur_BME680(rafraichissement);
   //delay(1000);
-   
+  TFT_Affiche_Valeur_BME680(AffichageBME680, AffichageBME680Pres);
+  
+  AffichageBME680Pres = AffichageBME680;
 }

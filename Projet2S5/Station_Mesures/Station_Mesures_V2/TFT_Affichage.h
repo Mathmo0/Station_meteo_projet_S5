@@ -1,9 +1,6 @@
 // Fichier TFT_Affichage.h
 // Spécifique à l'écran TFT Adafruit 2050
 
-#ifndef __TFT__
-#define __TFT__
-
 //#include <Arduino.h>
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <Adafruit_TFTLCD.h> // Hardware-specific library
@@ -37,8 +34,6 @@
 
 // Définition de constantes symboliques
 
-
-
 /*--------------------------------------------------------------------------------*/
 // Spécifique au shield écran TFT + dalle tactile Adafruit_2050_TFT
 // Arduino Mega2560, mode Data parallèle
@@ -54,9 +49,10 @@ void TFT_Affiche_Heure(Horloge H, Horloge P);
 void TFT_Affiche_EteHiv(int EteHiv, int EteHivPres);
 void TFT_Affiche_Etat_Synchro(NMEA Verif);
 void TFT_Affiche_ville_ref_fuseau_horaire(pays Pays, pays PaysPres);
-void TFT_Affiche_Valeur_BME680(Bsec * verif);
+void TFT_Affiche_Valeur_BME680(Bsec * verif, Bsec * valPres);
+int centre(int j, int t, int a);
+void remplacer_valeur(char * V, char * VP, int x, int y);
 void TFT_setup();
 void graphiqueMoyennePression();
 void MoyennePression(Horloge H);
 float GetDeltaPresssion();
-#endif

@@ -154,21 +154,16 @@ void TFT_Affiche_Valeur_BME680(Bsec * val)
 
 void graphiqueMoyennePression()
 {
-   float  absicsse[] = {10,300,225,300}; //x1,y1,x2,y2  Valeur que tu devra mettre mathis : 10,469,309,469
-   float  ordonne[] = {225,300,225,215};// x1,y1,x2,y2  Valeur que tu devra mettre mathis : 309,469,309,369
-   
+   float  absicsse[] = {10,469,309,469}; //x1,y1,x2,y2  Valeur que tu devra mettre mathis : 10,469,309,469
+   float  ordonne[] = {309,469,309,369};// x1,y1,x2,y2  Valeur que tu devra mettre mathis : 309,469,309,369
    /*5px d'epsce entre chaque barre et 5px pour chaque barre, => E((absicsse[0]-,absicsse[2])/10) pour avoir le nombre
    de coordonnées qu'on peut mettre sur l'abscisse, on mettra ces valeur(donc les différents deltaP) dans un tableau */
-   
    //float deltaP = SommePression/nbValeur;
-
-   
    tft.setCursor(0,0);
    tft.drawLine(absicsse[0], absicsse[1],absicsse[2],absicsse[3], RED);
    //tft.drawLine(ordonne[0], ordonne[1],ordonne[2],ordonne[3], RED);
    /* Definition de la zone du graph */ 
    tft.drawRect(absicsse[0], absicsse[1]-100,absicsse[2],110,WHITE);
-   
    /*Definition des lignes du graphique : */
    
    for(int i =10;i <= PMAX-PMIN;i= i+10)
@@ -179,7 +174,6 @@ void graphiqueMoyennePression()
   int nbBarre = 0;
   int distanceentreBarre = 5;
   int epaisseur_barre = 5;
-  
   
   //float StockageMoyennePressionTest[28] {900,1000,1980,2190,7777,987,3456,10987,5555,12654,999,7658,3333,6789,6543,1234,13765,7890,3456,6310,9876,4567,2345,9987,8876,7765,6654};
    for ( nbBarre = 0; nbBarre<=i; nbBarre++)
@@ -193,21 +187,16 @@ void graphiqueMoyennePression()
           //Serial.println("ENtrer dans la boucle >=PMAX");
           hauteurBarre = (PMAX-PMIN);//*epaisseur_barre;
       }
-
       else if (hauteurBarre <= PMIN)
       {
           //Serial.println("ENtrer dans la boucle <=PMIN");
           hauteurBarre = 0 ;//(PMIN-PMIN)*epaisseur_barre
       }
-
       else
       {
            //Serial.println("ENtrer dans la boucle normal");
            hauteurBarre = (StockageMoyennePression[nbBarre]-PMIN);//*epaisseur_barre ;
       }
-
-      
-
       //Serial.print("hauteur barre = ");Serial.println(hauteurBarre);
       tft.fillRect(absicsse[2]-(distanceentreBarre*nbBarre*2),absicsse[1]-hauteurBarre, epaisseur_barre,hauteurBarre,GREEN);
    }
@@ -253,7 +242,6 @@ void MoyennePression(Horloge H)
       
     }
   }
-    
 }
 
 float GetDeltaPresssion()
