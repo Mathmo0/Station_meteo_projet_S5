@@ -147,7 +147,8 @@ void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec * valPres)
       //----------------------------//
       char pres[10]; 
       //sprintf(pres, "%d", val->pressure);
-      sprintf(pres, "%d", val->rawTemperature);
+      dtostrf(val->rawTemperature, 10, 2, pres);
+      //sprintf(pres, "%d", val->rawTemperature);
       //(char *)(val->pressure);
       /*char * humid = (char *)(val->humidity);
       char * aqi = (char *)(val->iaq);
@@ -157,7 +158,8 @@ void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec * valPres)
 
       char presP[10]; 
       //sprintf(presP, "%d", valPres->pressure);
-      sprintf(presP, "%d", valPres->rawTemperature);
+      //sprintf(presP, "%d", valPres->rawTemperature);
+      dtostrf(valPres->rawTemperature, 10, 2, presP);
       //Serial.print(pres);
       //presP = (char *)(valPres->pressure);
       /*char * humidP = (char *)(valPres->humidity);

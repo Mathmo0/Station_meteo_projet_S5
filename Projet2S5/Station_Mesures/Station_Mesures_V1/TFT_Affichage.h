@@ -50,4 +50,5 @@ void TFT_Affiche_EteHiv(int EteHiv, int EteHivPres);
 void TFT_Affiche_Etat_Synchro(NMEA Verif);
 void TFT_Affiche_ville_ref_fuseau_horaire(pays Pays, pays PaysPres);
 void TFT_Affiche_Valeur_BME680(Bsec * verif);
+int centre(int j, int t, int a);
 void TFT_setup();

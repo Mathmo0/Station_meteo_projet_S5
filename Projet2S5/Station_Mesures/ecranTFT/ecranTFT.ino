@@ -53,7 +53,7 @@ void loop() {
    verif = getBME680();
    //Test = getDateDs1307();
 
-   
+
    TFT_Affiche_Valeur_BME680(verif, verifPres);
 
    //affichage_Valeur_BME680(verif);
