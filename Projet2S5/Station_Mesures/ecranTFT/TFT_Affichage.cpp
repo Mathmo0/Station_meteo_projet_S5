@@ -17,7 +17,7 @@ void TFT_setup()
   uint16_t identifier = tft.readID();
 
   tft.begin(identifier);
-tft.fillScreen(WHITE);
+tft.fillScreen(BLUE);
   Serial.println(F("Benchmark                Time (microseconds)"));
 
   Serial.println(F("Done!"));
@@ -145,10 +145,19 @@ void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec * valPres)
   //tft.println("DébutAffichage");
  if (val->status == BSEC_OK) // If new data is available
     { 
-      char presT[10];
-      dtostrf(val->rawTemperature, 10, 1, presT);
-      char presPT[10];
-      dtostrf(valPres->rawTemperature, 10, 1, presPT);
+      char  * presT;
+      char * presPT;
+      char tmp[10];
+      char tmp2[10];
+      dtostrf(val->rawTemperature, 10, 2, tmp);
+      presT = strdup(tmp);
+      dtostrf(valPres->rawTemperature, 10, 2, tmp2);
+      presPT = strdup(tmp2);
+      //Serial.println("tmp = ");Serial.println(tmp);
+      Serial.print("presT = ");Serial.println(presT);
+      Serial.print("presPT = ");Serial.println(presPT);
+      Serial.print("valPres->rawTemperature = ");Serial.println(valPres->rawTemperature);
+      Serial.print("val->rawTemperature = ");Serial.println(val->rawTemperature);
       //if(val->rawTemperature != valPres->rawTemperature)
       //{
         tft.setCursor(30, 155);
@@ -156,10 +165,10 @@ void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec * valPres)
         remplacer_valeur(presT, presPT, 80, 155); 
         //tft.print("  C");//tft.println(val->pressure);
       //}
-      free(presT);
-      free(presPT);
+      //free(presT);
+      //free(presPT);
 
-      char presH[10];
+      /*char presH[10];
       dtostrf(val->pressure, 10, 1, presH);
       char presPH[10];
       dtostrf(valPres->pressure, 10, 1, presPH);
@@ -199,7 +208,7 @@ void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec * valPres)
         //tft.print(" ppm");//tft.println(val->pressure);
       //}
       free(presE);
-      free(presPE);
+      free(presPE);*/
 
       /*char presB[10];
       dtostrf(val->breathVocEquivalent, 10, 1, presB);
@@ -234,11 +243,12 @@ void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec * valPres)
         //tft.print("iAQAcc :"); 
         remplacer_valeur(presAc, presPAc, 30, 320);//tft.println(val->pressure);
       }*/
-      /*tft.print("La pression vaut : ");tft.println(val->pressure);
+      /*tft.print("La température vaut : ");tft.println(presT);
+      tft.print("La pression vaut : ");tft.println(presH);
       tft.print("Le taux d'humidité vaut : ");tft.println(val->humidity);
       tft.print("Le l'IAQ vaut : ");tft.println(val->iaq);
       tft.print("L' iaqAccuracy vaut : ");tft.println(val->iaqAccuracy);
-      tft.print("La température vaut : ");tft.println(val->rawTemperature);
+      
       tft.print("Le taux de CO2 vaut : ");tft.println(val->co2Equivalent);
       tft.print("Le taux de COV vaut : ");tft.println(val->breathVocEquivalent);*/
       /*Serial.print("La pression vaut : ");Serial.println(val->pressure);

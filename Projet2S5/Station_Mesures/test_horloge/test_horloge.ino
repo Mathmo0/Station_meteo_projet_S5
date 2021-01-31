@@ -16,22 +16,22 @@ void setup()
   Horloge Test;
   Test.H.seconde = 0;
   Test.H.minute = 0;
-  Test.H.heure = 0;
+  Test.H.heure = 10;
   
   Test.D.jour_mois = 1;
   Test.D.mois =  3;
   Test.D.annee = 20;
 
   Horloge EteHiv;
-  EteHiv.H.heure = 0;
+  EteHiv.H.heure = 9;
   EteHiv.H.minute = 0;
   EteHiv.H.seconde = 0;
 
   EteHiv.D.jour_mois = 0;
   EteHiv.D.mois =  0;
   EteHiv.D.annee = 0;
-
-  pays FuseauHoraireDuPays = FuseauHoraire(3); //De base  Le Fuseau hraire est défini sur Paris 
+  int E = 0;
+  pays FuseauHoraireDuPays = FuseauHoraire(0); //De base  Le Fuseau hraire est défini sur Paris 
   Serial.print("coor.heure.pays  = ");Serial.println(FuseauHoraireDuPays.corr.heure); 
   
   Test = Correction_Heure_Date(Test,FuseauHoraireDuPays, EteHiv);

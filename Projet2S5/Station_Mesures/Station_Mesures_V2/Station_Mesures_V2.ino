@@ -36,10 +36,12 @@ int k = 0;
 
 extern float SommePression;
 extern int nbValeur;
-
+float recupDelta = 0;
+int synchroGPS = 0; // Pour refesh le graphique le il y a une synchronisation avec le GPS
 Horloge DatePres;
 int IndicateurEteHIverPres = 5;
 pays FuseauHorairePres;
+
 Bsec * AffichageBME680Pres;
 
 pays FuseauHoraire = fuseau_horaire_de_ref(0); // Fuseau Horaire de base : Paris
@@ -52,9 +54,11 @@ pays FuseauHoraire = fuseau_horaire_de_ref(0); // Fuseau Horaire de base : Paris
 #define T_EVNT1 3600*4 // Période de gestion de l'événémént 1
 #define T_EVNT2 3 // Période de gestion de l'événémént 2
 #define T_EVNT3 1
+#define T_EVNT4 3600 // rafraîchisement 
 volatile int T_Time_Out_Evenement1 = 0;
 volatile int T_Time_Out_Evenement2 = 0;
 volatile int T_Time_Out_Evenement3 =0;
+volatile int T_Time_Out_Evenement4 =0;
 
 /*--------------------------------------------------------------------------------------------*/
 // Routine d'IT TImer1 sur Overflow registre de comptage
@@ -66,6 +70,7 @@ ISR(TIMER1_OVF_vect)
   T_Time_Out_Evenement1 --;
   T_Time_Out_Evenement2 --;
   T_Time_Out_Evenement3 --;
+  T_Time_Out_Evenement4 --;
   
   TIFR1 |= 0B00000001;
   TCNT1 = BASE_TEMPS_TIMER1_1s;
@@ -151,6 +156,7 @@ void loop()
   {   
     if(synchro == true)
     {
+      synchroGPS = 1;
       H = Extract_date_heure_from_GPS(msgFromGpsParser.GPRMC.date,msgFromGpsParser.GPRMC.UTCtime);
       IndicateurEteHIver = IndicateurEteHiv(H);  
       H = Correction_Heure_Date(H,FuseauHoraire, IndicateurEteHIver);  
@@ -163,8 +169,11 @@ void loop()
   
   if (T_Time_Out_Evenement2 <= 0)
   {
-    AffichageBME680 = getBME680();  
-     
+    AffichageBME680 = getBME680();
+    SommePression = SommePression+AffichageBME680->pressure;
+    nbValeur++;  
+    MoyennePression(H);
+    
     T_Time_Out_Evenement2 = T_EVNT2;
   }
 
@@ -176,6 +185,7 @@ void loop()
         Serial.println("Synchronisé");
         if(k  <1)
         {
+          synchroGPS = 1;
           H = Extract_date_heure_from_GPS(msgFromGpsParser.GPRMC.date,msgFromGpsParser.GPRMC.UTCtime); 
           IndicateurEteHIver = IndicateurEteHiv(H);  
           H = Correction_Heure_Date(H,FuseauHoraire, IndicateurEteHIver);  
@@ -212,17 +222,20 @@ void loop()
       Serial.println("______________________ Fin Affichage ________________________");
       
   }
+
+  if (T_Time_Out_Evenement4 <= 0 || synchroGPS == 1)
+  {
+      synchroGPS =0;
+      recupDelta = GetDeltaPresssion();
+      graphiqueMoyennePression();
+      T_Time_Out_Evenement4 = T_EVNT4 -(+H.H.minute*60+H.H.seconde);
+  }
   FuseauHorairePres = FuseauHoraire;
   IndicateurEteHIverPres = IndicateurEteHIver;
   DatePres = H;
 
-  float recupDelta = 678;
-  SommePression = SommePression+AffichageBME680->pressure;
-  nbValeur++;
   //affichage_Valeur_BME680(verif);
-  graphiqueMoyennePression();
-  MoyennePression(H);
-  recupDelta = GetDeltaPresssion();
+    
   Serial.print("Delta = ");Serial.println(recupDelta);
   //affichage_Valeur_BME680(rafraichissement);
   //delay(1000);

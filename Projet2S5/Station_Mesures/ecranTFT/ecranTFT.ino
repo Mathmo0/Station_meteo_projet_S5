@@ -53,10 +53,10 @@ void loop() {
    verif = getBME680();
    //Test = getDateDs1307();
 
-
+   affichage_Valeur_BME680(verif);
    TFT_Affiche_Valeur_BME680(verif, verifPres);
 
-   //affichage_Valeur_BME680(verif);
+   
    //pays Pays = fuseau_horaire_de_ref(6);
    
    //Test = Correction_Heure_Date(Test, Pays, EteHiv);
