@@ -17,7 +17,7 @@ void TFT_setup()
   uint16_t identifier = tft.readID();
 
   tft.begin(identifier);
-tft.fillScreen(BLUE);
+tft.fillScreen(RED);
   Serial.println(F("Benchmark                Time (microseconds)"));
 
   Serial.println(F("Done!"));
@@ -128,12 +128,12 @@ void remplacer_valeur(char * V, char * VP, int x, int y)
   }
 
   
-  tft.setCursor(x + i*6, y);
-  tft.fillRect(x + i*6, y, (len-i)*6,7*2,BLACK);
+  tft.setCursor(x + i*6*2, y);
+  tft.fillRect(x + i*6*2, y, (len-i)*6*2,7*2,BLACK);
   //tft.fillRect
   for(i; i<=strlen(V); ++i)
   {
-    tft.print(V[i])+i*6;
+    tft.print(V[i]);//+i*6;
   }
   
   /*int i = 0;
@@ -169,24 +169,19 @@ void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec valPres)
       char * presPT;
       char tmp[10];
       char tmp2[10];
-      dtostrf(val->rawTemperature, 10, 2, tmp);
+      dtostrf(val->rawTemperature, 10, 1, tmp);
       presT = strdup(tmp);
-      dtostrf(valPres.rawTemperature, 10, 2, tmp2);
+      dtostrf(valPres.rawTemperature, 10, 1, tmp2);
       presPT = strdup(tmp2);
       //Serial.println("tmp = ");Serial.println(tmp);
       Serial.print("presT = ");Serial.println(presT);
       Serial.print("presPT = ");Serial.println(presPT);
       Serial.print("valPres->rawTemperature = ");Serial.println(valPres.rawTemperature);
       Serial.print("val->rawTemperature = ");Serial.println(val->rawTemperature);
-      //if(val->rawTemperature != valPres->rawTemperature)
-      //{
-        tft.setCursor(0, 155);
-        tft.print("Temperature :"); 
-        remplacer_valeur(presT, presPT, 108, 155); 
-        //tft.print("  C");//tft.println(val->pressure);
-      //}
-      //free(presT);
-      //free(presPT);
+      tft.setCursor(0, 155);
+      tft.print("Temperature : "); 
+      remplacer_valeur(presT, presPT, 130, 155); 
+      tft.print("  C");//tft.println(val->pressure);
 
       /*char presH[10];
       dtostrf(val->pressure, 10, 1, presH);
