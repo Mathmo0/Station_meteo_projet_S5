@@ -8,9 +8,9 @@
 
 float SommePression = 0; 
 int nbValeur = 0;
-float StockageMoyennePression[28] = {970,1000,980,990,1050,987,3456,10987,5555,12654,999,7658,3333,6789,6543,1234,13765,7890,3456,6310,9876,4567,2345,9987,8876,7765,6654,900};
-uint8_t heurePres  = 25;
-int i = 27;
+float StockageMoyennePression[28]; //valeur de test = {970,1000,980,990,1050,987,3456,10987,5555,12654,999,7658,3333,6789,6543,1234,13765,7890,3456,6310,9876,4567,2345,9987,8876,7765,6654,900};
+uint8_t heurePres  = 25; // on met une valeur impossible pour les heures pour éviter qu'on soit dans un cas particulier  
+int i = 0; // nb de valeur dans le tableau
 
 Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 
