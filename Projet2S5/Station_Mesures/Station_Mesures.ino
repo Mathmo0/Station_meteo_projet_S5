@@ -33,7 +33,7 @@ char * buffer2;
 NMEA msgFromGpsParser;
 int k = 0;
 
-pays FuseauHoraire = fuseau_horaire_de_ref(0); // Fuseau Horaire de base : Paris
+pays FuseauHoraire = fuseau_horaire_de_ref(3); // Fuseau Horaire de base : Paris
 
 /*varibale poru le Timer1 : */
 
@@ -139,7 +139,6 @@ void loop()
     T_Time_Out_Evenement1 = T_EVNT1;
   }
  
-  
   if (T_Time_Out_Evenement2 <= 0)
   {
     AffichageBME680 = getBME680();  

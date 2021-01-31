@@ -3,6 +3,14 @@
 
 
 #include "TFT_Affichage.h"
+#define PMIN 960
+#define PMAX 1050
+
+float SommePression = 0; 
+int nbValeur = 0;
+float StockageMoyennePression[28] = {970,1000,980,990,1050,987,3456,10987,5555,12654,999,7658,3333,6789,6543,1234,13765,7890,3456,6310,9876,4567,2345,9987,8876,7765,6654,900};
+uint8_t heurePres  = 25;
+int i = 27;
 
 Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 
@@ -60,7 +68,7 @@ void TFT_Affiche_Heure(Horloge H, Horloge P)
     tft.setCursor(0,150);
     //tft.fillScreen(BLACK);
     tft.setTextColor(WHITE);
-    tft.fillRect(0,150,100,20,BLACK);
+    tft.fillRect(0,150,90,20,BLACK);
     tft.print(H.H.heure);
     tft.print(":");
     tft.print(H.H.minute);
@@ -74,7 +82,7 @@ void TFT_Affiche_Heure(Horloge H, Horloge P)
 
 void TFT_Affiche_EteHiv(int EteHiv, int  EteHivPres)
 {
-  if( EteHiv != EteHivPres)
+  if( EteHiv == EteHivPres)
   {
     char * indic;
     if(EteHiv == 1)
@@ -86,8 +94,8 @@ void TFT_Affiche_EteHiv(int EteHiv, int  EteHivPres)
       indic = "hiver"  ;
     }
     tft.setTextSize(2);
-    tft.setCursor(100, 150);
-    tft.fillRect(100,150,160,20,BLACK);
+    tft.setCursor(90, 150);
+    tft.fillRect(90,150,150,20,BLACK);
     tft.print("heure d'");
     tft.print(indic);
   }
@@ -100,7 +108,7 @@ void TFT_Affiche_ville_ref_fuseau_horaire(pays Pays, pays PaysPres)
     tft.setTextSize(2);
     tft.setCursor(0, 200);
     tft.fillRect(0,200,150,20,BLACK);
-    tft.print(Pays.ville);tft.print(", ");tft.print(Pays.pays);
+    tft.print(Pays.ville);tft.print(",");tft.print(Pays.pays);
   }
 }
 
@@ -110,16 +118,14 @@ void TFT_Affiche_Etat_Synchro(NMEA Verif)
   if(Test_Synchro_GPS(Verif))
   {
     tft.setCursor(0, 250);
-    //tft.fillRect(0,250,150,20,BLACK);
-    tft.fillCircle(30,250,20,GREEN);
-    //tft.print("GPS est synchronise");
+    tft.fillRect(0,250,150,20,BLACK);
+    tft.print("GPS est synchronise");
   }
   else
   {
     tft.setCursor(0, 250);
-    //tft.fillRect(0,250,300,20,BLACK);
-    tft.fillCircle(30,250,20,RED);
-   // tft.print("GPS n'est pas synchronise");
+    tft.fillRect(0,250,300,20,BLACK);
+    tft.print("GPS n'est pas synchronise");
   }
 }
 
@@ -143,4 +149,123 @@ void TFT_Affiche_Valeur_BME680(Bsec * val)
     {
       Serial.println("val->statut : Erreur ");
     }  
+}
+
+
+void graphiqueMoyennePression()
+{
+   float  absicsse[] = {10,300,225,300}; //x1,y1,x2,y2  Valeur que tu devra mettre mathis : 10,469,309,469
+   float  ordonne[] = {225,300,225,215};// x1,y1,x2,y2  Valeur que tu devra mettre mathis : 309,469,309,369
+   
+   /*5px d'epsce entre chaque barre et 5px pour chaque barre, => E((absicsse[0]-,absicsse[2])/10) pour avoir le nombre
+   de coordonnées qu'on peut mettre sur l'abscisse, on mettra ces valeur(donc les différents deltaP) dans un tableau */
+   
+   //float deltaP = SommePression/nbValeur;
+
+   
+   tft.setCursor(0,0);
+   tft.drawLine(absicsse[0], absicsse[1],absicsse[2],absicsse[3], RED);
+   //tft.drawLine(ordonne[0], ordonne[1],ordonne[2],ordonne[3], RED);
+   /* Definition de la zone du graph */ 
+   tft.drawRect(absicsse[0], absicsse[1]-100,absicsse[2],110,WHITE);
+   
+   /*Definition des lignes du graphique : */
+   
+   for(int i =10;i <= PMAX-PMIN;i= i+10)
+   {
+    tft.drawLine(absicsse[0], absicsse[1]-i,absicsse[2],absicsse[3]-i, BLACK);
+   }
+   
+  int nbBarre = 0;
+  int distanceentreBarre = 5;
+  int epaisseur_barre = 5;
+  
+  
+  //float StockageMoyennePressionTest[28] {900,1000,1980,2190,7777,987,3456,10987,5555,12654,999,7658,3333,6789,6543,1234,13765,7890,3456,6310,9876,4567,2345,9987,8876,7765,6654};
+   for ( nbBarre = 0; nbBarre<=i; nbBarre++)
+   {
+      int hauteurBarre = roundf(StockageMoyennePression[nbBarre]) ;
+      //Serial.print("StockageMoyennePression[nbBarre]");Serial.println(StockageMoyennePression[nbBarre]);
+      //Serial.print("PMIN = ");Serial.println(PMIN);
+      //Serial.print("PMAX = ");Serial.println(PMAX);
+      if ( hauteurBarre >= PMAX)
+      {
+          //Serial.println("ENtrer dans la boucle >=PMAX");
+          hauteurBarre = (PMAX-PMIN);//*epaisseur_barre;
+      }
+
+      else if (hauteurBarre <= PMIN)
+      {
+          //Serial.println("ENtrer dans la boucle <=PMIN");
+          hauteurBarre = 0 ;//(PMIN-PMIN)*epaisseur_barre
+      }
+
+      else
+      {
+           //Serial.println("ENtrer dans la boucle normal");
+           hauteurBarre = (StockageMoyennePression[nbBarre]-PMIN);//*epaisseur_barre ;
+      }
+
+      
+
+      //Serial.print("hauteur barre = ");Serial.println(hauteurBarre);
+      tft.fillRect(absicsse[2]-(distanceentreBarre*nbBarre*2),absicsse[1]-hauteurBarre, epaisseur_barre,hauteurBarre,GREEN);
+   }
+}
+
+void MoyennePression(Horloge H)
+{
+  if( H.H.heure == heurePres)
+  {
+      StockageMoyennePression[i] = (SommePression/nbValeur)/100; // pour avoir en hPa
+      Serial.print(i);Serial.print(" : VAleur SommePression[i] = ");Serial.println(StockageMoyennePression[i]);
+      Serial.print(" : VAleur SommePression[0] = ");Serial.println(StockageMoyennePression[0]);
+      Serial.print(i);Serial.print(" : VAleur SommePression[26] = ");Serial.println(StockageMoyennePression[26]);
+      Serial.print(i);Serial.print(" : VAleur SommePression[27] = ");Serial.println(StockageMoyennePression[27]);
+      Serial.print(i);Serial.print(" : VAleur SommePression[28] = ");Serial.println(StockageMoyennePression[28]);
+  }
+  else
+  {
+    Serial.println("Avant____________");
+    Serial.print("VAleur SommePression = ");Serial.println(SommePression);
+    Serial.print("VAleur nbValeur = ");Serial.println(nbValeur);
+    Serial.print(i);Serial.print(" : VAleur SommePression[26] = ");Serial.println(StockageMoyennePression[26]);
+    Serial.print(i);Serial.print(" : VAleur SommePression[27] = ");Serial.println(StockageMoyennePression[27]);
+    
+    i++;
+    SommePression = 0; 
+    heurePres = H.H.heure;
+    nbValeur = 0;
+    if(i>=28)
+    {
+      /*on supprime la première valeur du tableau(la plus ancienne) en décalent tout de 1 et permet de libèrer la dernière case*/
+      
+      for(int j = 0; j<i-1;j++)
+      {
+          StockageMoyennePression[j] = StockageMoyennePression[j+1];
+      }
+      i--;
+      Serial.println("Après____________");
+      Serial.print("VAleur SommePression = ");Serial.println(SommePression);
+      Serial.print("VAleur nbValeur = ");Serial.println(nbValeur);
+      Serial.print(i);Serial.print(" : VAleur SommePression[26] = ");Serial.println(StockageMoyennePression[26]);
+      Serial.print(i);Serial.print(" : VAleur SommePression[27] = ");Serial.println(StockageMoyennePression[27]);
+      
+    }
+  }
+    
+}
+
+float GetDeltaPresssion()
+{
+  float DeltaP = 0;
+  if(StockageMoyennePression[0] == 0 || StockageMoyennePression[1] == 0 )
+  {
+       return DeltaP;
+  } 
+  else
+  {
+    DeltaP = StockageMoyennePression[i] - StockageMoyennePression[i-1];
+    return DeltaP; 
+  }
 }

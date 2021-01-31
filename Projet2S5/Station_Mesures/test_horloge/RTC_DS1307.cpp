@@ -95,7 +95,7 @@ uint8_t jour_semaine(uint8_t jour, uint8_t mois, uint8_t annee)
 int Bissextile(Horloge H)
 {
   int A = H.D.annee + 2000;
-  if(A%4 == 0 && A%100 != 100)
+  if(A%4 == 0 && A%100 != 0)
   {
     return 1;
   }
@@ -111,6 +111,10 @@ int Bissextile(Horloge H)
 
 Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, Horloge E)
 {
+  int Hheure = H.H.heure;
+  int Hmin = H.H.minute;
+  int EH = E.H.heure;
+  
   if(H.D.mois == 3 && H.D.jour_mois == 28 && H.H.heure == 2)
   {
     E.H.heure = 1;
@@ -120,7 +124,7 @@ Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, Horloge E)
     E.H.heure = -1;
   }
   
-  if((H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E.H.heure) >= 24)
+  if((Hheure + pays_UTC.corr.heure + ((Hmin + pays_UTC.corr.minute)/60) + E.H.heure) >= 24)
   {
     if(H.D.mois == 1 || H.D.mois == 3 || H.D.mois == 5 || H.D.mois == 7 || H.D.mois == 8 || H.D.mois == 10 || H.D.mois == 12)
     {
@@ -197,11 +201,55 @@ Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, Horloge E)
         ++H.D.jour_mois;
       }
     }
-  }
-  
   H.H.heure = (H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E.H.heure)%24;
   H.H.minute = (H.H.minute + pays_UTC.corr.minute + E.H.minute)%60;
-  
+  }
+
+  else if ((Hheure + pays_UTC.corr.heure + ((Hmin + pays_UTC.corr.minute)/60) + E.H.heure) < 0)
+  {
+      //Serial.println("____________");
+      //Serial.println((Hheure + pays_UTC.corr.heure + ((Hmin + pays_UTC.corr.minute)/60) + E.H.heure) );
+      //Serial.println("entre dans la condition heure négatif _______________________ ");
+      if(H.D.jour_mois ==1)
+      {
+        if(H.D.mois ==1)
+        {
+          H.D.jour_mois =31;
+          H.D.mois = 12;
+          H.D.annee--;  
+        }
+        else if(H.D.mois == 3)
+        {
+          H.D.mois = 2;
+          if(Bissextile(H))
+          {
+            H.D.jour_mois =29;    
+          }
+
+          else
+          {
+            H.D.jour_mois =28;  
+          }
+        }
+        else if (H.D.mois == 8)
+        {
+            H.D.jour_mois =31;
+            H.D.mois--; 
+        }
+        else
+        {
+          H.D.mois--;
+          H.D.jour_mois =30;
+        }
+      }
+
+      else
+      {
+        --H.D.jour_mois;
+      }
+  H.H.heure = (H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E.H.heure)+24;
+  H.H.minute = (H.H.minute + pays_UTC.corr.minute + E.H.minute)%60;
+  }
   return H;
 }
 
@@ -255,5 +303,5 @@ pays FuseauHoraire(int choix)
   
   Serial.println("Fuseau Horaire pays = ");Serial.println(FuseauHoraire[choix].corr.heure);
   int choix2 = choix%7;
-  return France;//FuseauHoraire[choix2];
+  return FuseauHoraire[choix];//FuseauHoraire[choix2];
 }

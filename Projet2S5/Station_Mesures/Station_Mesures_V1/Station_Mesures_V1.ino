@@ -92,10 +92,6 @@ void setup(void)
   
   beginGPS();
   Choix_Msg_NMEA(2);
-
-  /*Initialisation du capteurBME680 : */
-
-  beginBME680();
   
   /*Initialisation ecran TFT : */
     TFT_setup();
