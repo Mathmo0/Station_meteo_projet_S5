@@ -243,7 +243,7 @@ void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec valPres)
         free(presPE);
       }
       
-      //---pas assez de place pour affciher le taux de COV c'est fonctoinnel---// 
+      //---pas assez de place pour affciher le taux de COV mais c'est fonctoinnel---// 
       /*if (val->breathVocEquivalent != valPres.breathVocEquivalent)
       {
         char  * presB;
