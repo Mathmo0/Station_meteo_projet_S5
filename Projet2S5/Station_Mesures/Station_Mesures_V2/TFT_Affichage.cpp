@@ -8,9 +8,9 @@
 
 float SommePression = 0; 
 int nbValeur = 0;
-float StockageMoyennePression[28]; //valeur de test = {970,1000,980,990,1050,987,3456,10987,5555,12654,999,7658,3333,6789,6543,1234,13765,7890,3456,6310,9876,4567,2345,9987,8876,7765,6654,900};
-uint8_t heurePres  = 25; // on met une valeur impossible pour les heures pour éviter qu'on soit dans un cas particulier  
-int i = 0; // nb de valeur dans le tableau
+float StockageMoyennePression[28]; //= {970,1000,980,990,1050,987,3456,10987,5555,12654,999,7658,3333,6789,6543,1234,13765,7890,3456,6310,9876,4567,2345,9987,8876,7765,6654,900};
+uint8_t heurePres  = 25;
+int i = 0; //= 27;
 
 Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 
@@ -24,9 +24,9 @@ void TFT_setup()
   tft.setRotation(0);
   tft.fillScreen(BLACK);
   tft.fillRect(20,140,280,150,RED);
-  tft.fillRect(25,145,270,140,WHITE);
+  tft.fillRect(25,145,270,140,BLACK);
   tft.fillRect(20,295,280,55,GREEN);
-  tft.fillRect(25,300,270,45,WHITE);
+  tft.fillRect(25,300,270,45,BLACK);
   Serial.println(F("Benchmark                Time (microseconds)"));
 
   Serial.println(F("Done!"));
@@ -70,15 +70,6 @@ void TFT_Affichage_Date(Horloge H, Horloge P)
     tft.print(mois[H.D.mois-1]);
     tft.print(" ");
     tft.print(H.D.annee + 2000);
-    //tft.print("    ");
-
-    /*tft.print(H.H.heure);
-    tft.print(":");
-    tft.print(H.H.minute);
-    tft.print(":");
-    tft.print(H.H.seconde);
-    tft.println("    ");*/
-    //delay(1000);
   }
 }
 
@@ -106,10 +97,7 @@ void TFT_Affiche_Heure(Horloge H, Horloge P)
     tft.print(":");
     tft.print(H.H.minute);
     tft.print(":");
-    tft.print(H.H.seconde);
-    //tft.println("    ");
-    
-    //delay(1000);
+    tft.print(H.H.seconde);   
   }
 }
 
@@ -152,20 +140,13 @@ void TFT_Affiche_ville_ref_fuseau_horaire(pays Pays, pays PaysPres)
 void TFT_Affiche_Etat_Synchro(NMEA Verif)
 {
   tft.setTextSize(2);
-  //tft.setCursor(289, 50);
   if(Test_Synchro_GPS(Verif))
   {
-    //tft.setCursor(0, 250);
-    //tft.fillRect(0,250,150,20,BLACK);
     tft.fillCircle(289,57,10,GREEN);
-    //tft.print("GPS est synchronise");
   }
   else
   {
-    //tft.setCursor(0, 250);
-    //tft.fillRect(0,250,300,20,BLACK);
     tft.fillCircle(289,57,10,RED);
-   // tft.print("GPS n'est pas synchronise");
   }
 }
 
@@ -173,126 +154,144 @@ void remplacer_valeur(char * V, char * VP, int x, int y)
 {
   int len = max(strlen(V), strlen(VP));
   int i = 0;
-  Serial.println(V);
-  Serial.println(VP);
-  while(i <= len && V[i] == VP[i])
+  Serial.print("V = "); Serial.println(V);
+  Serial.print("VP = "); Serial.println(VP);
+  while (V[i] == VP[i] && i <= len)
   {
     ++i;
   }
-  
-  tft.setCursor(x + i*6 + 130, y);
-  tft.fillRect(x + i*6 + 130, y, 50,7*2,BLACK);
-  for(i; i<strlen(V); ++i)
+  tft.setCursor(x + i*6*2, y);
+  tft.fillRect(x + i*6*2, y, (len-i)*6*2,7*2,BLACK);
+  for (i; i <= strlen(V); ++i)
   {
     tft.print(V[i]);
   }
-  //tft.setCursor(x + i*6 + 130, y);
 }
 
-void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec * valPres)
-{
-  //tft.setCursor(0, 0);
-  
-  
-  tft.setTextSize(2);
-  //tft.println("DébutAffichage");
+void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec valPres)
+{  
+ tft.setTextSize(2);
  if (val->status == BSEC_OK) // If new data is available
     { 
-      char presT[10];
-      dtostrf(val->rawTemperature, 10, 1, presT);
-      char presPT[10];
-      dtostrf(valPres->rawTemperature, 10, 1, presPT);
-      if(val->rawTemperature != valPres->rawTemperature)
+      char tmp[10];
+      char tmp2[10];
+      if (val->rawTemperature != valPres.rawTemperature)
       {
-        tft.setCursor(30, 155);
-        //tft.print("Temperature :"); 
-        remplacer_valeur(presT, presPT, 80, 155); 
-        //tft.print("  C");//tft.println(val->pressure);
+        char  * presT;
+        char * presPT;
+        dtostrf(val->rawTemperature, 10, 1, tmp);
+        presT = strdup(tmp);
+        dtostrf(valPres.rawTemperature, 10, 1, tmp2);
+        presPT = strdup(tmp2);
+        tft.setCursor(27, 155);
+        tft.print("Temperature : "); 
+        remplacer_valeur(presT, presPT, 130, 155); 
+        tft.setCursor(280, 155);
+        tft.print("C");
+        free(presT);
+        free(presPT);
       }
 
-      char presH[10];
-      dtostrf(val->pressure, 10, 1, presH);
-      char presPH[10];
-      dtostrf(valPres->pressure, 10, 1, presPH);
-      if(val->pressure != valPres->pressure)
+      if (val->pressure != valPres.pressure)
       {
-        tft.setCursor(30, 185);
-        //tft.print("Pression :"); 
-        remplacer_valeur(presH, presPH, 20, 185); 
-        //tft.print(" hPa");//tft.println(val->pressure);
+        char  * presH;
+        char * presPH;
+        dtostrf(val->pressure/100, 10, 2, tmp);
+        presH = strdup(tmp);
+        dtostrf(valPres.pressure/100, 10, 2, tmp2);
+        presPH = strdup(tmp2);
+        tft.setCursor(27, 185);
+        tft.print("Pression : "); 
+        remplacer_valeur(presH, presPH, 130, 185); 
+        tft.setCursor(270, 185);
+        tft.print("Pa");
+        free(presH);
+        free(presPH);
       }
 
-      char presHu[10];
-      dtostrf(val->humidity, 10, 1, presHu);
-      char presPHu[10];
-      dtostrf(valPres->humidity, 10, 1, presPHu);
-      if(val->humidity != valPres->humidity)
+      if (val->humidity != valPres.humidity)
       {
-        tft.setCursor(30, 215);
-        //tft.print("Humidite :"); 
-        remplacer_valeur(presHu, presPHu, 20, 215); 
-        //tft.print(" %");//tft.println(val->pressure);
+        char  * presHu;
+        char * presPHu;
+        dtostrf(val->humidity, 10, 1, tmp);
+        presHu = strdup(tmp);
+        dtostrf(valPres.humidity, 10, 1, tmp2);
+        presPHu = strdup(tmp2);
+        tft.setCursor(27, 215);
+        tft.print("Humidite : "); 
+        remplacer_valeur(presHu, presPHu, 130, 215); 
+        tft.setCursor(280, 215);
+        tft.print("%");
+        free(presHu);
+        free(presPHu);
       }
 
-      char presE[10];
-      dtostrf(val->co2Equivalent, 10, 1, presE);
-      char presPE[10];
-      dtostrf(valPres->co2Equivalent, 10, 1, presPE);
-      if(val->co2Equivalent != valPres->co2Equivalent)
+      if (val->co2Equivalent != valPres.co2Equivalent)
       {
-        tft.setCursor(30, 240);
-        //tft.print("Taux de CO2 :"); 
-        remplacer_valeur(presE, presPE, 30, 240); 
-        //tft.print(" ppm");//tft.println(val->pressure);
+        char  * presE;
+        char * presPE;
+        dtostrf(val->co2Equivalent, 10, 1, tmp);
+        presE = strdup(tmp);
+        dtostrf(valPres.co2Equivalent, 10, 1, tmp2);
+        presPE = strdup(tmp2);
+        tft.setCursor(27, 240);
+        tft.print("Taux de CO2 : "); 
+        remplacer_valeur(presE, presPE, 130, 240); 
+        tft.setCursor(260, 240);
+        tft.print("ppm");
+        free(presE);
+        free(presPE);
+      }
+      
+      //---pas assez de place pour affciher le taux de COV c'est fonctoinnel---// 
+      /*if (val->breathVocEquivalent != valPres.breathVocEquivalent)
+      {
+        char  * presB;
+        char * presPB;
+        dtostrf(val->breathVocEquivalent, 10, 1, tmp);
+        presB = strdup(tmp);
+        dtostrf(valPres.breathVocEquivalent, 10, 1, tmp2);
+        presPB = strdup(tmp2);
+        tft.setCursor(27, 260);
+        tft.print("Taux de COV : "); 
+        remplacer_valeur(presB, presPB, 130, 260); 
+        tft.setCursor(260, 260);
+        tft.print("ppm");
+        free(presB);
+        free(presPB);
+      }*/
+      
+      if (val->iaq != valPres.iaq)
+      {
+        char  * presA;
+        char * presPA;
+        dtostrf(val->iaq, 10, 1, tmp);
+        presA = strdup(tmp);
+        dtostrf(valPres.iaq, 10, 1, tmp2);
+        presPA = strdup(tmp2);
+        tft.setCursor(27, 305);
+        tft.print("IAQ : "); 
+        remplacer_valeur(presA, presPA, 130, 305); 
+        tft.setCursor(260, 305);
+        free(presA);
+        free(presPA);
       }
 
-      char presB[10];
-      dtostrf(val->breathVocEquivalent, 10, 1, presB);
-      char presPB[10];
-      dtostrf(valPres->breathVocEquivalent, 10, 1, presPB);
-      if(val->breathVocEquivalent != valPres->breathVocEquivalent)
+      if (val->iaqAccuracy != valPres.iaqAccuracy)
       {
-        tft.setCursor(30, 260);
-        //tft.print("Taux de COV :"); 
-        remplacer_valeur(presB, presPB, 70, 260); 
-        //tft.print(" ppm");//tft.println(val->pressure);
+        char  * presAc;
+        char * presPAc;
+        dtostrf(val->iaqAccuracy, 10, 0, tmp);
+        presAc = strdup(tmp);
+        dtostrf(valPres.iaqAccuracy, 10, 0, tmp2);
+        presPAc = strdup(tmp2);
+        tft.setCursor(27, 325);
+        tft.print("IAQAcc : "); 
+        remplacer_valeur(presAc, presPAc, 130, 325); 
+        tft.setCursor(260, 325);
+        free(presAc);
+        free(presPAc);
       }
-
-      char presA[10];
-      dtostrf(val->iaq, 10, 1, presA);
-      char presPA[10];
-      dtostrf(valPres->iaq, 10, 1, presPA);
-      if(val->iaq != valPres->iaq)
-      {
-        tft.setCursor(30, 305);
-        //tft.print("iAQ :"); 
-        remplacer_valeur(presA, presPA, 30, 305);//tft.println(val->pressure);
-      }
-
-      char presAc[10];
-      dtostrf(val->iaqAccuracy, 10, 1, presAc);
-      char presPAc[10];
-      dtostrf(valPres->iaqAccuracy, 10, 1, presPAc);
-      if(val->iaqAccuracy != valPres->iaqAccuracy)
-      {
-        tft.setCursor(30, 320);
-        //tft.print("iAQAcc :"); 
-        remplacer_valeur(presAc, presPAc, 30, 320);//tft.println(val->pressure);
-      }
-      /*tft.print("La pression vaut : ");tft.println(val->pressure);
-      tft.print("Le taux d'humidité vaut : ");tft.println(val->humidity);
-      tft.print("Le l'IAQ vaut : ");tft.println(val->iaq);
-      tft.print("L' iaqAccuracy vaut : ");tft.println(val->iaqAccuracy);
-      tft.print("La température vaut : ");tft.println(val->rawTemperature);
-      tft.print("Le taux de CO2 vaut : ");tft.println(val->co2Equivalent);
-      tft.print("Le taux de COV vaut : ");tft.println(val->breathVocEquivalent);*/
-      /*Serial.print("La pression vaut : ");Serial.println(val->pressure);
-      Serial.print("Le taux d'humidité vaut : ");Serial.println(val->humidity);
-      Serial.print("Le l'IAQ vaut : ");Serial.println(val->iaq);
-      Serial.print("L' iaqAccuracy vaut : ");Serial.println(val->iaqAccuracy);
-      Serial.print("La température vaut : ");Serial.println(val->rawTemperature);
-      Serial.print("Le taux de CO2 vaut : ");Serial.println(val->co2Equivalent);
-      Serial.print("Le taux de COV vaut : ");Serial.println(val->breathVocEquivalent);*/
     } 
     else 
     {
@@ -316,7 +315,7 @@ void graphiqueMoyennePression()
    
    for(int i =10;i <= PMAX-PMIN;i= i+10)
    {
-    tft.drawLine(absicsse[0], absicsse[1]-i,absicsse[2],absicsse[3]-i, BLACK);
+    tft.drawLine(absicsse[0], absicsse[1]-i,absicsse[2],absicsse[3]-i, WHITE);
    }
    
   int nbBarre = 0;
@@ -403,5 +402,27 @@ float GetDeltaPresssion()
   {
     DeltaP = StockageMoyennePression[i] - StockageMoyennePression[i-1];
     return DeltaP; 
+  }
+}
+
+void TFT_Affiche_Delta(float recupDelta, float recupDeltaPres)
+{
+  char tmp[10];
+  char tmp2[10];
+  if(recupDelta != recupDeltaPres)
+  {
+    char  * presD;
+    char * presPD;
+    dtostrf(recupDelta, 10, 0, tmp);
+    presD = strdup(tmp);
+    dtostrf(recupDeltaPres, 10, 0, tmp2);
+    presPD = strdup(tmp2);
+    tft.setCursor(27, 265);
+    tft.print("DP : "); 
+    remplacer_valeur(presD, presPD, 130, 265);
+    tft.setCursor(260, 265);
+    tft.print("Pa");
+    free(presD);
+    free(presPD);
   }
 }

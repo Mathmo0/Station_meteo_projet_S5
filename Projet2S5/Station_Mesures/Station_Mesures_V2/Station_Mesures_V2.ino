@@ -41,8 +41,9 @@ int synchroGPS = 0; // Pour refesh le graphique le il y a une synchronisation av
 Horloge DatePres;
 int IndicateurEteHIverPres = 5;
 pays FuseauHorairePres;
+float recupDeltaPres = -2;
 
-Bsec * AffichageBME680Pres;
+Bsec AffichageBME680Pres;
 
 pays FuseauHoraire = fuseau_horaire_de_ref(0); // Fuseau Horaire de base : Paris
 
@@ -135,7 +136,8 @@ void setup(void)
   TCNT1 = BASE_TEMPS_TIMER1_1s;
   interrupts();
   TCCR1B |= 0B00000101; //demarre à 1024
-  Serial.println("Initialisation du timer1 : done");
+  //Serial.println("Initialisation du timer1 : done");
+  AffichageBME680Pres.iaqAccuracy = -2;
 } 
 /*--------------------------------------------------------------------------------------------*/
 void loop() 
@@ -182,7 +184,7 @@ void loop()
        if (synchro == true)
       {
         
-        Serial.println("Synchronisé");
+        //Serial.println("Synchronisé");
         if(k  <1)
         {
           synchroGPS = 1;
@@ -195,7 +197,7 @@ void loop()
       }
       else
       {
-        Serial.println("Non Synchronisé");
+        //Serial.println("Non Synchronisé");
       }
       H = getDateDs1307();
       //Affiche_date_heure(H);
@@ -219,7 +221,7 @@ void loop()
         //TFT_Affiche_Valeur_BME680(AffichageBME680);
       //}
       T_Time_Out_Evenement3 = T_EVNT3;
-      Serial.println("______________________ Fin Affichage ________________________");
+      //Serial.println("______________________ Fin Affichage ________________________");
       
   }
 
@@ -228,18 +230,15 @@ void loop()
       synchroGPS =0;
       recupDelta = GetDeltaPresssion();
       graphiqueMoyennePression();
+      TFT_Affiche_Delta(recupDelta, recupDeltaPres);
+      recupDeltaPres = recupDelta;
       T_Time_Out_Evenement4 = T_EVNT4 -(+H.H.minute*60+H.H.seconde);
   }
   FuseauHorairePres = FuseauHoraire;
   IndicateurEteHIverPres = IndicateurEteHIver;
   DatePres = H;
 
-  //affichage_Valeur_BME680(verif);
-    
-  Serial.print("Delta = ");Serial.println(recupDelta);
-  //affichage_Valeur_BME680(rafraichissement);
-  //delay(1000);
   TFT_Affiche_Valeur_BME680(AffichageBME680, AffichageBME680Pres);
   
-  AffichageBME680Pres = AffichageBME680;
+  AffichageBME680Pres = *AffichageBME680;
 }

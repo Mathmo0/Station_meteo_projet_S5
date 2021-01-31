@@ -126,16 +126,11 @@ void remplacer_valeur(char * V, char * VP, int x, int y)
   {
     ++i;
   }
-
-  
   tft.setCursor(x + i*6*2, y);
   tft.fillRect(x + i*6*2, y, (len-i)*6*2,7*2,BLACK);
-
-  //tft.fillRect
   for (i; i <= strlen(V); ++i)
   {
-    tft.print(V[i]);//+i*6;
-
+    tft.print(V[i]);
   }
 
   int i = 0;
