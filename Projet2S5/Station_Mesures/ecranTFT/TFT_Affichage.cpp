@@ -120,23 +120,36 @@ void remplacer_valeur(char * V, char * VP, int x, int y)
 {
   int len = max(strlen(V), strlen(VP));
   int i = 0;
-  Serial.println(V);
-  Serial.println(VP);
+  Serial.print("V = ");Serial.println(V);
+  Serial.print("VP = ");Serial.println(VP);
   while(V[i] == VP[i] && i <= len)
   {
     ++i;
   }
   
   tft.setCursor(x + i*6, y);
-  tft.fillRect(x + i*6, y, 50,7*2,BLACK);
+  tft.fillRect(x + i*6, y, (len-i)*6,7*2,BLACK);
+  //tft.fillRect
   for(i; i<=strlen(V); ++i)
   {
-    tft.print(V[i]);
+    tft.print(V[i])+i*6;
   }
+  
+  /*int i = 0;
+  lenV = strlen(V);
+  lenVP = strlen(VP);
+  if (strcmp(V,VP) == 1)
+  {
+    //permet d'obtenir quand est-ce que les 2 chaîne sont différentes
+    while(V[i] == VP[i])
+    {
+      i++ 
+    }
+  }*/
   //tft.setCursor(x + i*6 + 130, y);
 }
 
-void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec * valPres)
+void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec valPres)
 {
   //tft.setCursor(0, 0);
   
@@ -151,18 +164,18 @@ void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec * valPres)
       char tmp2[10];
       dtostrf(val->rawTemperature, 10, 2, tmp);
       presT = strdup(tmp);
-      dtostrf(valPres->rawTemperature, 10, 2, tmp2);
+      dtostrf(valPres.rawTemperature, 10, 2, tmp2);
       presPT = strdup(tmp2);
       //Serial.println("tmp = ");Serial.println(tmp);
       Serial.print("presT = ");Serial.println(presT);
       Serial.print("presPT = ");Serial.println(presPT);
-      Serial.print("valPres->rawTemperature = ");Serial.println(valPres->rawTemperature);
+      Serial.print("valPres->rawTemperature = ");Serial.println(valPres.rawTemperature);
       Serial.print("val->rawTemperature = ");Serial.println(val->rawTemperature);
       //if(val->rawTemperature != valPres->rawTemperature)
       //{
-        tft.setCursor(30, 155);
-        //tft.print("Temperature :"); 
-        remplacer_valeur(presT, presPT, 80, 155); 
+        tft.setCursor(0, 155);
+        tft.print("Temperature :"); 
+        remplacer_valeur(presT, presPT, 108, 155); 
         //tft.print("  C");//tft.println(val->pressure);
       //}
       //free(presT);

@@ -6,7 +6,7 @@
 //extern char * EteHivPres;
 
 //pays PaysPres;
-Bsec * verifPres;
+Bsec  verifPres;
 //Horloge EteHiv;
 /*EteHiv.H.heure = 0;
   EteHiv.H.minute = 0;
@@ -78,6 +78,19 @@ void loop() {
    /*DatePres = Test;
    EteHivPres = EEteHiv2;
    PaysPres = Pays;*/
-   verifPres = verif;
+   verifPres = *verif;
+    Serial.println("_____________VerifPres__________________");
+    
+    Serial.print("La pression vaut : ");Serial.println(verifPres.pressure);
+    Serial.print("Le taux d'humidité vaut : ");Serial.println(verifPres.humidity);
+    Serial.print("Le l'IAQ vaut : ");Serial.println(verifPres.iaq);
+    Serial.print("L' iaqAccuracy vaut : ");Serial.println(verifPres.iaqAccuracy);
+    Serial.print("La température vaut : ");Serial.println(verifPres.rawTemperature);
+    Serial.print("Le taux de CO2 vaut : ");Serial.println(verifPres.co2Equivalent);
+    Serial.print("Le taux de COV vaut : ");Serial.println(verifPres.breathVocEquivalent);
+
+     Serial.println("---------------Fin VerifPres---------------");
+   
+   
    //delay(1000);
 }
