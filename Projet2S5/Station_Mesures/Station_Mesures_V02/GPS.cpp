@@ -201,14 +201,6 @@ void Choix_Msg_NMEA(int c)
 Horloge Extract_date_heure_from_GPS(char Date[6], char Heure[6])
 {
     /*extraction del'heure */
-  
-    /*Serial.print(" Heure[0] = ");Serial.println(Heure[0]);
-    Serial.print(" Heure[1] = ");Serial.println(Heure[1]);
-    Serial.print(" Heure[2] = ");Serial.println(Heure[2]);
-    Serial.print(" Heure[3] = ");Serial.println(Heure[3]);
-    Serial.print(" Heure[4] = ");Serial.println(Heure[4]);
-    Serial.print(" Heure[5] = ");Serial.println(Heure[5]);*/
-    
     
     char HeureFromGPS[3];  
     char MinFromGPS[3]; 
