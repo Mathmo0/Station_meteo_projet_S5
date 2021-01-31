@@ -14,11 +14,17 @@ void TFT_setup()
 
   tft.begin(identifier);
   tft.setRotation(0);
-  tft.fillScreen(BLUE);
+  tft.fillScreen(BLACK);
   Serial.println(F("Benchmark                Time (microseconds)"));
 
   Serial.println(F("Done!"));
   //tft.fillScreen(WHITE);
+}
+
+int centre(int j, int t, int a)
+{
+  int k = (a - j*6*t)/2;
+  return k;
 }
 
 void TFT_Affichage_Date(Horloge H, Horloge P)
@@ -28,11 +34,23 @@ void TFT_Affichage_Date(Horloge H, Horloge P)
     tft.setTextSize(2);
     char * jour[] = {"Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"};
     char * mois[]= {"Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre"};
-    tft.setCursor(0,100);
-    tft.fillRect(0,100,319,20,BLACK);
+
+    //char * date[] = strcat(jour[H.D.jour_semaine-1], " ", H.D.jour_mois, " ", mois[H.D.mois-1], " ", H.D.annee + 2000);
+
+    char jm[20]; 
+    //dtostrf(H.D.jour_mois, 3, 0, jm);
+    sprintf(jm, "%d", H.D.jour_mois);
+    char aa[20]; 
+    //dtostrf(H.D.annee + 2000, 5, 0, aa);
+    sprintf(aa, "%d", H.D.annee + 2000);
+    int taille = strlen(jm) + strlen(aa) + strlen(jour[H.D.jour_semaine-1]) + strlen(mois[H.D.mois-1]) + 3;
+    int i = centre(taille, 2, 320);
+    tft.setCursor(i,20);
+    tft.fillRect(0,17,320,20,BLACK);
     
     
-    tft.setTextSize(2);
+    //tft.setTextSize(2);
+    //tft.print(date[]);
     tft.print(jour[H.D.jour_semaine-1]);
     tft.print(" ");
     tft.print(H.D.jour_mois);
@@ -56,11 +74,22 @@ void TFT_Affiche_Heure(Horloge H, Horloge P)
 {
   if(H.H.seconde != P.H.seconde)
   {
-    tft.setTextSize(2);
-    tft.setCursor(0,150);
+    tft.setTextSize(4);
+    char h[5];
+    sprintf(h, "%d", H.H.heure);
+
+    char m[5];
+    sprintf(m, "%d", H.H.minute);
+
+    char s[5];
+    sprintf(s, "%d", H.H.seconde);
+    
+    int taille = strlen(h) + strlen(m) + strlen(s) + 2;
+    int i = centre(taille, 4, 320);;
+    tft.setCursor(i,80);
     //tft.fillScreen(BLACK);
     tft.setTextColor(WHITE);
-    tft.fillRect(0,150,100,20,BLACK);
+    tft.fillRect(0,77,320,40,BLACK);
     tft.print(H.H.heure);
     tft.print(":");
     tft.print(H.H.minute);
@@ -86,9 +115,11 @@ void TFT_Affiche_EteHiv(int EteHiv, int  EteHivPres)
       indic = "hiver"  ;
     }
     tft.setTextSize(2);
-    tft.setCursor(100, 150);
-    tft.fillRect(100,150,160,20,BLACK);
-    tft.print("heure d'");
+    int taille = strlen(indic);
+    int i = centre(taille, 2, 100);
+    tft.setCursor(180 + i, 50);
+    tft.fillRect(180,47,100,20,BLACK);
+    //tft.print("heure d'");
     tft.print(indic);
   }
 }
@@ -98,8 +129,10 @@ void TFT_Affiche_ville_ref_fuseau_horaire(pays Pays, pays PaysPres)
   if(strcmp(Pays.ville, PaysPres.ville))
   {
     tft.setTextSize(2);
-    tft.setCursor(0, 200);
-    tft.fillRect(0,200,150,20,BLACK);
+    int taille = strlen(Pays.ville) + strlen(Pays.pays) + 2;
+    int i = centre(taille, 2, 180);
+    tft.setCursor(i, 50);
+    tft.fillRect(0,47,180,20,BLACK);
     tft.print(Pays.ville);tft.print(", ");tft.print(Pays.pays);
   }
 }
@@ -107,18 +140,19 @@ void TFT_Affiche_ville_ref_fuseau_horaire(pays Pays, pays PaysPres)
 void TFT_Affiche_Etat_Synchro(NMEA Verif)
 {
   tft.setTextSize(2);
+  //tft.setCursor(289, 50);
   if(Test_Synchro_GPS(Verif))
   {
-    tft.setCursor(0, 250);
+    //tft.setCursor(0, 250);
     //tft.fillRect(0,250,150,20,BLACK);
-    tft.fillCircle(30,250,20,GREEN);
+    tft.fillCircle(289,57,20,GREEN);
     //tft.print("GPS est synchronise");
   }
   else
   {
-    tft.setCursor(0, 250);
+    //tft.setCursor(0, 250);
     //tft.fillRect(0,250,300,20,BLACK);
-    tft.fillCircle(30,250,20,RED);
+    tft.fillCircle(289,57,10,RED);
    // tft.print("GPS n'est pas synchronise");
   }
 }
@@ -126,7 +160,7 @@ void TFT_Affiche_Etat_Synchro(NMEA Verif)
 void TFT_Affiche_Valeur_BME680(Bsec * val)
 {
   tft.setCursor(0, 0);
-  tft.fillRect(0,300,319,100,BLACK);
+  tft.fillRect(0,300,320,100,BLACK);
   tft.setTextSize(1);
   //tft.println("DébutAffichage");
  if (val->status == BSEC_OK) // If new data is available
