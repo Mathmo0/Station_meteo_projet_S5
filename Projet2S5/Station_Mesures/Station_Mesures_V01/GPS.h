@@ -65,6 +65,4 @@ bool  Test_Synchro_GPS(NMEA Verif);
 void Choix_Msg_NMEA(int c);
 Horloge Extract_date_heure_from_GPS(char Date[6], char Heure[6]);
 
-bool testUnitaireBuffer(char * buffer);
-bool testUnitaireParse(NMEA verif);
 #endif

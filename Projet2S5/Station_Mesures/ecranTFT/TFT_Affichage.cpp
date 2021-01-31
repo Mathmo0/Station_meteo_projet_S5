@@ -17,7 +17,7 @@ void TFT_setup()
   uint16_t identifier = tft.readID();
 
   tft.begin(identifier);
-tft.fillScreen(WHITE);
+tft.fillScreen(BLUE);
   Serial.println(F("Benchmark                Time (microseconds)"));
 
   Serial.println(F("Done!"));
@@ -120,26 +120,37 @@ void remplacer_valeur(char * V, char * VP, int x, int y)
 {
   int len = max(strlen(V), strlen(VP));
   int i = 0;
-  Serial.println(V);
-  Serial.println(VP);
+  Serial.print("V = ");Serial.println(V);
+  Serial.print("VP = ");Serial.println(VP);
   while(V[i] == VP[i] && i <= len)
   {
     ++i;
   }
-  if(i != len)
+
+  
+  tft.setCursor(x + i*6, y);
+  tft.fillRect(x + i*6, y, (len-i)*6,7*2,BLACK);
+  //tft.fillRect
+  for(i; i<=strlen(V); ++i)
   {
-    tft.setCursor(x + i*6, y);
-    tft.fillRect(x + i*6, y, 50,7*2,BLACK);
-    for(i; i<=strlen(V); ++i)
-    {
-      tft.print(V[i]);
-    }
+    tft.print(V[i])+i*6;
   }
   
+  /*int i = 0;
+  lenV = strlen(V);
+  lenVP = strlen(VP);
+  if (strcmp(V,VP) == 1)
+  {
+    //permet d'obtenir quand est-ce que les 2 chaîne sont différentes
+    while(V[i] == VP[i])
+    {
+      i++ 
+    }
+  }*/
   //tft.setCursor(x + i*6 + 130, y);
 }
 
-void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec * valPres)
+void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec valPres)
 {
   //tft.setCursor(0, 0);
   Serial.print("La pression vaut : ");Serial.println(val->pressure);
@@ -154,32 +165,30 @@ void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec * valPres)
   //tft.println("DébutAffichage");
  if (val->status == BSEC_OK) // If new data is available
     { 
-      Serial.println("entrer if");
-      //if(val->rawTemperature != valPres->rawTemperature)
-      //{
-        Serial.println("entrer if 2");
-      char * presT;
+      char  * presT;
       char * presPT;
       char tmp[10];
       char tmp2[10];
-      dtostrf(val->rawTemperature, 10, 1, tmp);
-      dtostrf(valPres->rawTemperature, 10, 1, tmp2);
+      dtostrf(val->rawTemperature, 10, 2, tmp);
       presT = strdup(tmp);
+      dtostrf(valPres.rawTemperature, 10, 2, tmp2);
       presPT = strdup(tmp2);
-      Serial.println("presT = ");Serial.println(presT);
-      Serial.println("presPT = ");Serial.println(presPT);
-      Serial.println("valPres->rawTemperature = ");Serial.println(valPres->rawTemperature);
-      Serial.println("val->rawTemperature = ");Serial.println(val->rawTemperature);
-        tft.setCursor(30, 155);
-        //tft.print("Temperature :"); 
-        //remplacer_valeur(presT, presPT, 80, 155); 
+      //Serial.println("tmp = ");Serial.println(tmp);
+      Serial.print("presT = ");Serial.println(presT);
+      Serial.print("presPT = ");Serial.println(presPT);
+      Serial.print("valPres->rawTemperature = ");Serial.println(valPres.rawTemperature);
+      Serial.print("val->rawTemperature = ");Serial.println(val->rawTemperature);
+      //if(val->rawTemperature != valPres->rawTemperature)
+      //{
+        tft.setCursor(0, 155);
+        tft.print("Temperature :"); 
+        remplacer_valeur(presT, presPT, 108, 155); 
         //tft.print("  C");//tft.println(val->pressure);
-      /*free(presT);
-      free(presPT);
       //}
-      
+      //free(presT);
+      //free(presPT);
 
-      char presH[10];
+      /*char presH[10];
       dtostrf(val->pressure, 10, 1, presH);
       char presPH[10];
       dtostrf(valPres->pressure, 10, 1, presPH);
@@ -218,8 +227,8 @@ void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec * valPres)
         remplacer_valeur(presE, presPE, 30, 240); 
         //tft.print(" ppm");//tft.println(val->pressure);
       //}
-      //free(presE);
-      //free(presPE);*/
+      free(presE);
+      free(presPE);
 
       /*char presB[10];
       dtostrf(val->breathVocEquivalent, 10, 1, presB);
@@ -254,11 +263,12 @@ void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec * valPres)
         //tft.print("iAQAcc :"); 
         remplacer_valeur(presAc, presPAc, 30, 320);//tft.println(val->pressure);
       }*/
-      /*tft.print("La pression vaut : ");tft.println(val->pressure);
+      /*tft.print("La température vaut : ");tft.println(presT);
+      tft.print("La pression vaut : ");tft.println(presH);
       tft.print("Le taux d'humidité vaut : ");tft.println(val->humidity);
       tft.print("Le l'IAQ vaut : ");tft.println(val->iaq);
       tft.print("L' iaqAccuracy vaut : ");tft.println(val->iaqAccuracy);
-      tft.print("La température vaut : ");tft.println(val->rawTemperature);
+      
       tft.print("Le taux de CO2 vaut : ");tft.println(val->co2Equivalent);
       tft.print("Le taux de COV vaut : ");tft.println(val->breathVocEquivalent);*/
       

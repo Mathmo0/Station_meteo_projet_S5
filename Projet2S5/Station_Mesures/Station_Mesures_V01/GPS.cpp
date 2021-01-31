@@ -35,7 +35,7 @@ char * GetGPS_MSG()
     reset();
     resetMes = 1;  
     //Parse = 1;
-  }     
+  }    
       while(Serial1.available())
       {  
          buffer[count] = Serial1.read();
@@ -53,7 +53,7 @@ char * GetGPS_MSG()
          if(count == tailleMAx)
          {
             reset();  
-         } 
+         }
       }
 }
 
@@ -74,15 +74,17 @@ NMEA GPS_msg_parse(char * buffer2)
  
   if( Parse == 1)
   {
+    //Serial.println("Entrée1");
     char * copieBuffer = strdup(buffer2);
     Parse = 0; 
     char *  parsermsg;
      
     
     parsermsg = strtok(copieBuffer, separators); // id 
-    
+    //Serial.print("parsermsg = "); Serial.println(parsermsg);
     if(strcmp(parsermsg,"$GPRMC") == 0)
     {
+      //Serial.println("Entrée2");
       stokageMsg.GPRMC.id = parsermsg;
       parsermsg = strtok (NULL, ","); //UTC
       stokageMsg.GPRMC.UTCtime = parsermsg;
@@ -151,9 +153,9 @@ NMEA GPS_msg_parse(char * buffer2)
       Serial.print(" stokageMsg.PMTK.flag = ");Serial.println(stokageMsg.PMTK.flag);*/
 
       return stokageMsg;
-    }
-            
+    }      
     free(copieBuffer);
+    
   }
    return stokageMsg;
   
@@ -175,7 +177,7 @@ bool Test_Synchro_GPS(NMEA Verif)
   else if(strcmp(Verif.GPGGA.id,"$GPGGA") == 0)
   {
     //Serial.println("Synchronise");
-    return true;
+    return false;
   }
   else
   {
@@ -199,6 +201,14 @@ void Choix_Msg_NMEA(int c)
 Horloge Extract_date_heure_from_GPS(char Date[6], char Heure[6])
 {
     /*extraction del'heure */
+  
+    /*Serial.print(" Heure[0] = ");Serial.println(Heure[0]);
+    Serial.print(" Heure[1] = ");Serial.println(Heure[1]);
+    Serial.print(" Heure[2] = ");Serial.println(Heure[2]);
+    Serial.print(" Heure[3] = ");Serial.println(Heure[3]);
+    Serial.print(" Heure[4] = ");Serial.println(Heure[4]);
+    Serial.print(" Heure[5] = ");Serial.println(Heure[5]);*/
+    
     
     char HeureFromGPS[3];  
     char MinFromGPS[3]; 
@@ -246,14 +256,16 @@ Horloge Extract_date_heure_from_GPS(char Date[6], char Heure[6])
     H.D.jour_mois = (uint8_t)atoi(jourMoisFromGPS);
     H.D.mois = (uint8_t)atoi(MoisFromGPS);
     H.D.annee = (uint8_t)atoi(anneeFromGPS);
+
+    H.D.jour_semaine = jour_semaine( H.D.jour_mois,H.D.mois,H.D.annee);
+    
     /*Serial.println("H.D.annee =  ");Serial.println(H.D.annee);
     Serial.println("H.D.mois =  ");Serial.println(H.D.mois);
-    Serial.print("H.D.jour_mois=  ");Serial.println(H.D.jour_mois);*/
-    H.D.jour_semaine = jour_semaine( H.D.jour_mois,H.D.mois,H.D.annee);
-    //Serial.print("H.D.jour-semaine =  ");Serial.println(H.D.jour_semaine);
+    Serial.print("H.D.jour_mois=  ");Serial.println(H.D.jour_mois);
+    
+    Serial.print("H.D.jour-semaine =  ");Serial.println(H.D.jour_semaine);*/
     return H;
 }
-
 bool testUnitaireBuffer(char * buffer)
 {
    int compteur = 0;

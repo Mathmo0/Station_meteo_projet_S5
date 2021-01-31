@@ -17,6 +17,10 @@ uint8_t jour_semaine(uint8_t jour, uint8_t mois, uint8_t annee)
   uint8_t m = mois + 12*c-2;
   uint8_t j = ( jour + a + a/4 - a/100 + a/400 + (31*m)/12 ) % 7;
 
+  if (j ==0)
+  {
+    j = 7;  
+  }
   return j;
 }
 
@@ -108,8 +112,9 @@ Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, int E)
         ++H.D.jour_mois;
       }
     }
-    H.H.heure = (H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E)%24;
-    H.H.minute = (H.H.minute + pays_UTC.corr.minute)%60;
+   H.H.heure = (H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E)%24;
+   H.H.minute = (H.H.minute + pays_UTC.corr.minute)%60;
+   return H;
   }
  else if ((Hheure + pays_UTC.corr.heure + ((Hmin + pays_UTC.corr.minute)/60) + E) < 0)
   {
@@ -152,8 +157,15 @@ Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, int E)
       }
   H.H.heure = (H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E)+24;
   H.H.minute = (H.H.minute + pays_UTC.corr.minute)%60;
+  return H;
   }
-  
+  else
+  {
+    H.H.heure = (H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E)%24;
+    H.H.minute = (H.H.minute + pays_UTC.corr.minute)%60;
+    return H;
+  }
+ 
   return H;
 }
 
