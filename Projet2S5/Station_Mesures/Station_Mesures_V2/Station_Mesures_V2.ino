@@ -52,10 +52,10 @@ pays FuseauHoraire = fuseau_horaire_de_ref(0); // Fuseau Horaire de base : Paris
 //#define BASE_TEMPS_TIMER1_05s 57723U
 #define BASE_TEMPS_TIMER1_1s 49911U
 #define Led2_pin LED_BUILTIN
-#define T_EVNT1 3600*4 // Période de gestion de l'événémént 1
-#define T_EVNT2 3 // Période de gestion de l'événémént 2
-#define T_EVNT3 1
-#define T_EVNT4 3600 // rafraîchisement 
+#define T_EVNT1 14400 // 4 heures Période de gestion GPS 
+#define T_EVNT2 3 // Période de gestion de BME680
+#define T_EVNT3 1 // Affichage (heure etc)
+#define T_EVNT4 3600 // rafraîchisement graphique et delta
 volatile int T_Time_Out_Evenement1 = 0;
 volatile int T_Time_Out_Evenement2 = 0;
 volatile int T_Time_Out_Evenement3 =0;
@@ -111,21 +111,7 @@ void setup(void)
   beginBME680();
   
   /*Initialisation ecran TFT : */
-    TFT_setup();
-    
-    /*Horloge DatePres;
-    DatePres.H.seconde = 0;
-    DatePres.H.minute = 0;
-    DatePres.H.heure = 0;
-  
-    DatePres.D.jour_mois = 0;
-    DatePres.D.mois =  0;
-    DatePres.D.annee = 0;
-    DatePres.D.jour_semaine = 0;
-
-    int IndicateurEteHIverPres = 0;
-    pays FuseauHorairePres;*/
-  /*Partie initialisation Timer1 : */
+  TFT_setup();
   
   noInterrupts();
   TCCR1A = 0B00000000; // Mode normal

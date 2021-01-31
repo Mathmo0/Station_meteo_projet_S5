@@ -60,7 +60,6 @@ void TFT_Affichage_Date(Horloge H, Horloge P)
     tft.setCursor(i,20);
     tft.fillRect(0,17,320,20,BLACK);
     
-    
     //tft.setTextSize(2);
     //tft.print(date[]);
     tft.print(jour[H.D.jour_semaine-1]);
@@ -203,8 +202,8 @@ void TFT_Affiche_Valeur_BME680(Bsec * val, Bsec valPres)
         tft.setCursor(27, 185);
         tft.print("Pression : "); 
         remplacer_valeur(presH, presPH, 130, 185); 
-        tft.setCursor(270, 185);
-        tft.print("Pa");
+        tft.setCursor(260, 185);
+        tft.print("hPa");
         free(presH);
         free(presPH);
       }
@@ -354,20 +353,9 @@ void MoyennePression(Horloge H)
   if( H.H.heure == heurePres)
   {
       StockageMoyennePression[i] = (SommePression/nbValeur)/100; // pour avoir en hPa
-      Serial.print(i);Serial.print(" : VAleur SommePression[i] = ");Serial.println(StockageMoyennePression[i]);
-      Serial.print(" : VAleur SommePression[0] = ");Serial.println(StockageMoyennePression[0]);
-      Serial.print(i);Serial.print(" : VAleur SommePression[26] = ");Serial.println(StockageMoyennePression[26]);
-      Serial.print(i);Serial.print(" : VAleur SommePression[27] = ");Serial.println(StockageMoyennePression[27]);
-      Serial.print(i);Serial.print(" : VAleur SommePression[28] = ");Serial.println(StockageMoyennePression[28]);
   }
   else
-  {
-    Serial.println("Avant____________");
-    Serial.print("VAleur SommePression = ");Serial.println(SommePression);
-    Serial.print("VAleur nbValeur = ");Serial.println(nbValeur);
-    Serial.print(i);Serial.print(" : VAleur SommePression[26] = ");Serial.println(StockageMoyennePression[26]);
-    Serial.print(i);Serial.print(" : VAleur SommePression[27] = ");Serial.println(StockageMoyennePression[27]);
-    
+  {    
     i++;
     SommePression = 0; 
     heurePres = H.H.heure;
@@ -380,13 +368,7 @@ void MoyennePression(Horloge H)
       {
           StockageMoyennePression[j] = StockageMoyennePression[j+1];
       }
-      i--;
-      Serial.println("Après____________");
-      Serial.print("VAleur SommePression = ");Serial.println(SommePression);
-      Serial.print("VAleur nbValeur = ");Serial.println(nbValeur);
-      Serial.print(i);Serial.print(" : VAleur SommePression[26] = ");Serial.println(StockageMoyennePression[26]);
-      Serial.print(i);Serial.print(" : VAleur SommePression[27] = ");Serial.println(StockageMoyennePression[27]);
-      
+      i--;      
     }
   }
 }
@@ -419,9 +401,9 @@ void TFT_Affiche_Delta(float recupDelta, float recupDeltaPres)
     presPD = strdup(tmp2);
     tft.setCursor(27, 265);
     tft.print("DP : "); 
-    remplacer_valeur(presD, presPD, 130, 265);
+    remplacer_valeur(presD, presPD, 100, 265);
     tft.setCursor(260, 265);
-    tft.print("Pa");
+    tft.print("hPa");
     free(presD);
     free(presPD);
   }

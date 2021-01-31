@@ -39,7 +39,7 @@ char * GetGPS_MSG()
       while(Serial1.available())
       {  
          buffer[count] = Serial1.read();
-         //Serial.print(buffer[count]);
+         //Serial.print(buffer[count]); 
          if(buffer[count] == '\n' && buffer[count-1] == '\r' )
          {
               resetMes = 0;
@@ -103,16 +103,7 @@ NMEA GPS_msg_parse(char * buffer2)
       stokageMsg.GPRMC.date = parsermsg;
       parsermsg = strtok (NULL, ", *");//mode (magnetic variation et Est/West indicator sont sauté car on a aucune valeur)
       stokageMsg.GPRMC.mode = parsermsg;
-      /*Serial.print(" stokageMsg.GPRMC.id = ");Serial.println(stokageMsg.GPRMC.id);
-      Serial.print(" stokageMsg.GPRMC.UTCtime = ");Serial.println(stokageMsg.GPRMC.UTCtime);
-      Serial.print(" stokageMsg.GPRMC.statut = ");Serial.println(stokageMsg.GPRMC.statut);
-      Serial.print(" stokageMsg.GPRMC.latitude = ");Serial.println(stokageMsg.GPRMC.latitude);
-      Serial.print(" stokageMsg.GPRMC.indicateurLatitute = ");Serial.println(stokageMsg.GPRMC.indicateurLatitute);
-      Serial.print(" stokageMsg.GPRMC.longitude = ");Serial.println(stokageMsg.GPRMC.longitude);
-      Serial.print(" stokageMsg.GPRMC.indicateurLongitude = ");Serial.println(stokageMsg.GPRMC.indicateurLongitude);
-      Serial.print(" stokageMsg.GPRMC.date = ");Serial.println(stokageMsg.GPRMC.date);
-      Serial.print(" stokageMsg.GPRMC.mode = ");Serial.println(stokageMsg.GPRMC.mode);*/
-
+      
       return stokageMsg;
     }
     else if(strcmp(parsermsg,"$GPGGA") == 0)
@@ -130,10 +121,6 @@ NMEA GPS_msg_parse(char * buffer2)
       parsermsg = strtok (NULL, ","); // MSL Altitude
       stokageMsg.GPGGA.mslAltitude = parsermsg;
       
-      /*Serial.print(" stokageMsg.GPGGA.id = ");Serial.println(stokageMsg.GPGGA.id);
-      Serial.print(" stokageMsg.GPGGA.positionIndicator = ");Serial.println(stokageMsg.GPGGA.positionIndicator);
-      Serial.print(" stokageMsg.GPGGA.mslAltitude = ");Serial.println(stokageMsg.GPGGA.mslAltitude);*/
-
       return stokageMsg;
       
     }
@@ -146,10 +133,6 @@ NMEA GPS_msg_parse(char * buffer2)
       stokageMsg.PMTK.flag = parsermsg;
       parsermsg = strtok (NULL, ", *"); 
       
-      /*Serial.print(" stokageMsg.PMTK.id = ");Serial.println(stokageMsg.PMTK.id);
-      Serial.print(" stokageMsg.PMTK.cmd = ");Serial.println(stokageMsg.PMTK.cmd);
-      Serial.print(" stokageMsg.PMTK.flag = ");Serial.println(stokageMsg.PMTK.flag);*/
-
       return stokageMsg;
     }
     
@@ -175,7 +158,7 @@ bool Test_Synchro_GPS(NMEA Verif)
   else if(strcmp(Verif.GPGGA.id,"$GPGGA") == 0)
   {
     //Serial.println("Synchronise");
-    return false;
+    return true;
   }
   else
   {
@@ -221,13 +204,8 @@ Horloge Extract_date_heure_from_GPS(char Date[6], char Heure[6])
     H.H.heure = (uint8_t)atoi(HeureFromGPS);
     H.H.minute = (uint8_t)atoi(MinFromGPS);
     H.H.seconde = (uint8_t)atoi(SecFromGPS);
-    /*Serial.print("H.H.heure = ");Serial.println(H.H.heure);
-    Serial.print("H.H.Minute = ");Serial.println(H.H.minute);
-    Serial.print("H.H.seconde = ");Serial.println(H.H.seconde);*/
 
     /*extraction dela date*/
-    
-    
     
     jourMoisFromGPS[0] = (char)Date[0];
     jourMoisFromGPS[1] = (char)Date[1];
@@ -244,9 +222,7 @@ Horloge Extract_date_heure_from_GPS(char Date[6], char Heure[6])
     H.D.jour_mois = (uint8_t)atoi(jourMoisFromGPS);
     H.D.mois = (uint8_t)atoi(MoisFromGPS);
     H.D.annee = (uint8_t)atoi(anneeFromGPS);
-    /*Serial.println("H.D.annee =  ");Serial.println(H.D.annee);
-    Serial.println("H.D.mois =  ");Serial.println(H.D.mois);
-    Serial.print("H.D.jour_mois=  ");Serial.println(H.D.jour_mois);*/
+    
     H.D.jour_semaine = jour_semaine( H.D.jour_mois,H.D.mois,H.D.annee);
     //Serial.print("H.D.jour-semaine =  ");Serial.println(H.D.jour_semaine);
     return H;
@@ -283,94 +259,5 @@ bool testUnitaireBuffer(char * buffer)
 
 bool testUnitaireParse(NMEA verif)
 {
-  /* if(strcmp(verif.GPRMC.id,"$GPRMC") == 0)
-    {
-       if(strcmp(verif.GPRMC.UTCtime,'\0') == 0)
-       {
-          return false; 
-       }
-       
-       if(strcmp(verif.GPRMC.statut,'\0') == 0)
-       {
-          return false; 
-       }
-       
-       if(strcmp(verif.GPRMC.id,"$GPRMC") == 0)
-       {
-          return false; 
-       }          
-       
-       if(strcmp(verif.GPRMC.id,"$GPRMC") == 0)
-       {
-          return false; 
-       }
-       
-       if(strcmp(verif.GPRMC.id,"$GPRMC") == 0)
-       {
-          return false; 
-       }
-       
-       if(strcmp(verif.GPRMC.id,"$GPRMC") == 0)
-       {
-          return false; 
-       }
-       
-       if(strcmp(verif.GPRMC.id,"$GPRMC") == 0)
-       {
-          return false; 
-       }
-       
-       if(strcmp(verif.GPRMC.id,"$GPRMC") == 0)
-       {
-          return false; 
-       }
-      stokageMsg.GPRMC.UTCtime = parsermsg;
-   
-      stokageMsg.GPRMC.statut = parsermsg;
-      
-      stokageMsg.GPRMC.latitude = parsermsg;
-    
-      stokageMsg.GPRMC.indicateurLatitute = parsermsg;
-      parsermsg = strtok (NULL, ",");//longitude 
-      stokageMsg.GPRMC.longitude = parsermsg;
-      parsermsg = strtok (NULL, ","); //indicateur longitude
-      stokageMsg.GPRMC.indicateurLongitude = parsermsg;
-      parsermsg = strtok (NULL, ","); //speed gound
-      parsermsg = strtok (NULL, ","); // course ground 
-      parsermsg = strtok (NULL, ","); // date
-      stokageMsg.GPRMC.date = parsermsg;
-      parsermsg = strtok (NULL, ", *");//mode (magnetic variation et Est/West indicator sont sauté car on a aucune valeur)
-      stokageMsg.GPRMC.mode = parsermsg;
-
-      return stokageMsg;
-    }
-    else if(strcmp(parsermsg,"$GPGGA") == 0)
-    {
-      stokageMsg.GPGGA.id = parsermsg;
-      parsermsg = strtok (NULL, ","); //UTC
-      parsermsg = strtok (NULL, ","); // Latitude 
-      parsermsg = strtok (NULL, ","); // Indic Latitude
-      parsermsg = strtok (NULL, ","); //Longitude
-      parsermsg = strtok (NULL, ","); // Indic longitude 
-      parsermsg = strtok (NULL, ","); // position dicator 
-      stokageMsg.GPGGA.positionIndicator = parsermsg;
-      parsermsg = strtok (NULL, ","); // satellites used 
-      parsermsg = strtok (NULL, ","); //HDOP
-      parsermsg = strtok (NULL, ","); // MSL Altitude
-      stokageMsg.GPGGA.mslAltitude = parsermsg;
-      
-
-      return stokageMsg;
-      
-    }
-    else if(strcmp(parsermsg,"$PMTK001") == 0)
-    {
-          
-    }
-
-    else
-    {
-        return false;  
-    }
-     return true;*/
+  
 }
