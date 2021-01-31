@@ -43,7 +43,7 @@ Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, int E)
   
   int Hheure = H.H.heure;
   int Hmin = H.H.minute;
-  int EH = E.H.heure;
+  int EH = E;
   
   if(H.D.mois >= 3 && H.D.jour_mois >= 28 && H.H.heure >= 2)
   {
@@ -108,7 +108,7 @@ Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, int E)
         ++H.D.jour_mois;
       }
     }
-    H.H.heure = (H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E.H.heure)%24;
+    H.H.heure = (H.H.heure + pays_UTC.corr.heure + ((H.H.minute + pays_UTC.corr.minute)/60) + E)%24;
     H.H.minute = (H.H.minute + pays_UTC.corr.minute)%60;
   }
  else if ((Hheure + pays_UTC.corr.heure + ((Hmin + pays_UTC.corr.minute)/60) + E) < 0)
