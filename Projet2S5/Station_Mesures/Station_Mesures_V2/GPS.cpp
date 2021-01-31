@@ -39,7 +39,7 @@ char * GetGPS_MSG()
       while(Serial1.available())
       {  
          buffer[count] = Serial1.read();
-         //Serial.print(buffer[count]); //Le laisser sinon la fonction ne fonctionne plus
+         //Serial.print(buffer[count]);
          if(buffer[count] == '\n' && buffer[count-1] == '\r' )
          {
               resetMes = 0;
@@ -103,7 +103,6 @@ NMEA GPS_msg_parse(char * buffer2)
       stokageMsg.GPRMC.date = parsermsg;
       parsermsg = strtok (NULL, ", *");//mode (magnetic variation et Est/West indicator sont sauté car on a aucune valeur)
       stokageMsg.GPRMC.mode = parsermsg;
-      //testH++;
       /*Serial.print(" stokageMsg.GPRMC.id = ");Serial.println(stokageMsg.GPRMC.id);
       Serial.print(" stokageMsg.GPRMC.UTCtime = ");Serial.println(stokageMsg.GPRMC.UTCtime);
       Serial.print(" stokageMsg.GPRMC.statut = ");Serial.println(stokageMsg.GPRMC.statut);

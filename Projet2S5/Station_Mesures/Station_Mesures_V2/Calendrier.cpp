@@ -17,6 +17,7 @@ uint8_t jour_semaine(uint8_t jour, uint8_t mois, uint8_t annee)
   uint8_t m = mois + 12*c-2;
   uint8_t j = ( jour + a + a/4 - a/100 + a/400 + (31*m)/12 ) % 7;
 
+  /*Dimanche vaut 0 avec cette formule donc on remet le résultat à 7*/
   if (j ==0)
   {
     j = 7;  
@@ -116,7 +117,8 @@ Horloge Correction_Heure_Date(Horloge H, pays pays_UTC, int E)
    H.H.minute = (H.H.minute + pays_UTC.corr.minute)%60;
    return H;
   }
- else if ((Hheure + pays_UTC.corr.heure + ((Hmin + pays_UTC.corr.minute)/60) + E) < 0)
+  /*Cas ou on décrémente d'un jour */
+  else if ((Hheure + pays_UTC.corr.heure + ((Hmin + pays_UTC.corr.minute)/60) + E) < 0)
   {
       if(H.D.jour_mois ==1)
       {
